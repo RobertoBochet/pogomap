@@ -1,0 +1,72 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+#map {
+	height: 100%;
+	width: 100%;
+}
+
+.GoogleMap .container, .GoogleMap .buttonsContainer {
+	margin: 10px;
+	background-image: none;
+	border-radius: 2px;
+	overflow: hidden;
+	background-color: white;
+}
+.GoogleMap .buttonsContainer {
+	cursor: pointer;
+}
+.GoogleMap .buttonsContainer > div {
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px -1px inset;
+	transition: background-color 100ms linear, background-size 100ms linear;
+	background-size: 18px 18px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.GoogleMap .buttonsContainer > div:hover {
+	background-color: #f0f0f0;
+}
+.GoogleMap .buttonsContainer > div.selected {
+	background-color: #cccccc;
+	background-size: 32px 32px;
+}
+
+#image {
+	max-width: 150px;
+	max-height: 150px;
+	width: 15vw;
+	height: 15vw;
+	margin: 5px;
+	box-shadow: 0 0 5px black inset;
+	display: block;
+}
+#nameContainer {
+	width: 50vw;
+}
+#name {
+	text-align: center;
+	line-height: 20px;
+}
+
+
+#gridButtons > div:nth-child(1) { background-image: url("/icons/grid_big.svg"); }
+#gridButtons > div:nth-child(2) { background-image: url("/icons/grid_small.svg"); }
+#nestsButton { background-image: url("/icons/grass.svg"); }
+
+
+#typeButtons > div:nth-child(1) { background-image: url("/icons/gym.svg"); }
+#typeButtons > div:nth-child(2) { background-image: url("/icons/pokestop_blue.svg"); }
+#typeButtons > div:nth-child(3) { background-image: url("/icons/question_mark.svg"); }
+#typeButtons > div:nth-child(4) { background-image: url("/icons/portal_pink.svg"); }
+
+
+#eligibleButtons > div:nth-child(1) { background-image: url("/icons/star_gold.svg"); }
+#eligibleButtons > div:nth-child(2) { background-image: url("/icons/star_white.svg"); }

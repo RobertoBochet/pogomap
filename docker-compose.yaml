@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  server:
+    build: ./
+    environment:
+      - DB_HOST=db:3306
+      - DB_NAME=pogomap
+      - DB_USER=root
+      - DB_PASS=NjNXFh2XVJgsBY36
+    restart: always
+    ports:
+      - "127.0.0.1:5775:5775/tcp"
+    volumes:
+      - /mnt/data/pogomap/map/layers:/app/templates/layers
+    depends_on:
+      - db
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=NjNXFh2XVJgsBY36
+      - MYSQL_DATABASE=pogomap
+    volumes:
+      - /mnt/data/pogomap/db:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    ports:
+      - "127.0.0.1:7575:3306/tcp"
