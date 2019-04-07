@@ -16,13 +16,13 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:8
+    image: mdillon/postgis:11-alpine
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=NjNXFh2XVJgsBY36
-      - MYSQL_DATABASE=pogomap
+      - POSTGRES_PASSWORD=NjNXFh2XVJgsBY36
+      - POSTGRES_DB=pogomap
     volumes:
-      - /mnt/data/pogomap/db:/var/lib/mysql
+      - /mnt/data/pogomap/db:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
     ports:
-      - "127.0.0.1:7575:3306/tcp"
+      - "127.0.0.1:7676:5432"

@@ -1,0 +1,1 @@
+CREATE TYPE entities_type AS ENUM ('none', 'pokestop', 'gym');

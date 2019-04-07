@@ -1,23 +1,34 @@
-USE `pogomap`;
-
-DELIMITER ;;
-CREATE TRIGGER `portals_BEFORE_INSERT` BEFORE INSERT ON `portals` FOR EACH ROW BEGIN
-	#Rand id
-	DECLARE counter INT;
-    IF (NEW.`id` = 0) THEN
-		loop1: LOOP
-			SET NEW.`id` = (SELECT FLOOR(RAND()*(999999-100000)+100000));
-			SET @counter = (SELECT COUNT(*) FROM `portals` WHERE `id` = NEW.`id`);
-			IF (@counter = 0) THEN
-				LEAVE loop1;
-			END IF;
-		END LOOP;
+CREATE FUNCTION portals_check () RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    counter integer := 0;
+	rand integer;
+BEGIN
+    -- Rand id
+    IF NEW."id" = 0 THEN
+        LOOP
+            rand := floor(random() * (999999 - 100000) + 100000);
+        	EXIT WHEN (SELECT
+                COUNT(*)
+            FROM
+                "portals"
+            WHERE
+                "id" = rand) = 0;
+        END LOOP;
+		NEW."id" := rand;
     END IF;
-    
-    #Image protocol
-    SET NEW.`image` = REPLACE(NEW.`image`, "http://", "//");
-    SET NEW.`image` = REPLACE(NEW.`image`, "https://", "//");
-END;;
-DELIMITER ;
 
-COMMIT;
+    -- Image protocol
+    NEW."image" := replace(NEW."image", 'http://', '//');
+    NEW."image" := replace(NEW."image", 'https://', '//');
+
+	RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER "portals_BEFORE_INSERT"
+    BEFORE INSERT ON "portals"
+    FOR EACH ROW
+    EXECUTE PROCEDURE portals_check ();
+

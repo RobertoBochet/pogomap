@@ -38,7 +38,7 @@ def layers(path):
     return render_template("/layers/"+path)
 
 if __name__ == '__main__':
-    while True:
+    while False:
         try:
             pogomap = PogoMap(
                 db_host = os.environ["DB_HOST"],
