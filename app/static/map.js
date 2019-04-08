@@ -126,14 +126,14 @@ class Enviroment
 	{
 		Entity.icons = {
 			portal: { 
-				url: "/icons/portal_pink.svg",
+				url: "/static/icons/portal_pink.svg",
 				size: new google.maps.Size(60, 60),
 				scaledSize: new google.maps.Size(60, 60),
 				origin: new google.maps.Point(0, 0),
 				anchor: new google.maps.Point(1/2*60, 9/10*60)
 			},
 			pokestop: { 
-				url: "/icons/pokestop_blue.svg",
+				url: "/static/icons/pokestop_blue.svg",
 				size: new google.maps.Size(60, 60),
 				scaledSize: new google.maps.Size(60, 60),
 				origin: new google.maps.Point(0, 0),
@@ -141,7 +141,7 @@ class Enviroment
 				zIndex: 2
 			},
 			gym: { 
-				url: "/icons/gym.svg",
+				url: "/static/icons/gym.svg",
 				size: new google.maps.Size(45, 45),
 				scaledSize: new google.maps.Size(45, 45),
 				origin: new google.maps.Point(0, 0),
@@ -149,7 +149,7 @@ class Enviroment
 				zIndex: 3
 			},
 			gymEligible: { 
-				url: "/icons/gym_gold.svg",
+				url: "/static/icons/gym_gold.svg",
 				size: new google.maps.Size(45, 45),
 				scaledSize: new google.maps.Size(45, 45),
 				origin: new google.maps.Point(0, 0),
@@ -157,7 +157,7 @@ class Enviroment
 				zIndex: 4
 			},
 			unverified: { 
-				url: "/icons/question_mark.svg",
+				url: "/static/icons/question_mark.svg",
 				size: new google.maps.Size(45, 45),
 				scaledSize: new google.maps.Size(45, 45),
 				origin: new google.maps.Point(0, 0),
@@ -282,9 +282,9 @@ class Enviroment
 			zIndex: 10
 		});
 	
-		s17.loadGeoJson("/layers/s2cells/17.geojson");
-		s14.loadGeoJson("/layers/s2cells/14.geojson");
-		s13.loadGeoJson("/layers/s2cells/13.geojson");
+		s17.loadGeoJson("/static/layers/s2cells/17.geojson");
+		s14.loadGeoJson("/static/layers/s2cells/14.geojson");
+		s13.loadGeoJson("/static/layers/s2cells/13.geojson");
 	
 		this.layers.s2cells.small.data = [s14, s17];
 		this.layers.s2cells.big.data = [s13];
@@ -303,7 +303,7 @@ class Enviroment
 			zIndex: 1
 		});
 
-		nests.loadGeoJson("/layers/nests.geojson");
+		nests.loadGeoJson("/static/layers/nests.geojson");
 
 		this.layers.nests.data = [nests];
 	}
@@ -312,14 +312,14 @@ class Enviroment
 	{
 		let self = this;
 		if(key !== "") {
-			$.getJSON("/getentities.php?type=unverified", function(data) {
+			$.getJSON("/getentities/unverified/", function(data) {
 				if(data.status == "ok") {
 					for(let o of data.entities) {
 						self.entities.push(new Unverified(o));
 					}
 				} else console.error("Error");
 			});
-			$.getJSON("/getentities.php?type=notinpogo", function(data) {
+			$.getJSON("/getentities/notinpogo/", function(data) {
 				if(data.status == "ok") {
 					for(let o of data.entities) {
 						self.entities.push(new Entity(o));
@@ -379,7 +379,7 @@ class Enviroment
 		if(obj.type !== undefined && obj.type === this.currentEntity.type) return;
 		if(obj.isEligible !== undefined && obj.isEligible === this.currentEntity.isEligible) return;
 
-		$.getJSON("/setentities.php", {
+		$.getJSON("/setentities/", {
 			key: key,
 			id: this.currentEntity.id,
 			type: ((obj.type !== undefined) ? obj.type : this.currentEntity.type),
@@ -402,7 +402,7 @@ class Enviroment
 	fetch()
 	{
 		let self = this;
-		$.getJSON("/getentities.php?type=inpogo", function(data) {
+		$.getJSON("/getentities/inpogo/", function(data) {
 			if(data.status == "ok") {
 				for(let o of data.entities) {
 					self.entities.push(new Entity(o));

@@ -57,16 +57,16 @@ html, body {
 }
 
 
-#gridButtons > div:nth-child(1) { background-image: url("/icons/grid_big.svg"); }
-#gridButtons > div:nth-child(2) { background-image: url("/icons/grid_small.svg"); }
-#nestsButton { background-image: url("/icons/grass.svg"); }
+#gridButtons > div:nth-child(1) { background-image: url("/static/icons/grid_big.svg"); }
+#gridButtons > div:nth-child(2) { background-image: url("/static/icons/grid_small.svg"); }
+#nestsButton { background-image: url("/static/icons/grass.svg"); }
 
 
-#typeButtons > div:nth-child(1) { background-image: url("/icons/gym.svg"); }
-#typeButtons > div:nth-child(2) { background-image: url("/icons/pokestop_blue.svg"); }
-#typeButtons > div:nth-child(3) { background-image: url("/icons/question_mark.svg"); }
-#typeButtons > div:nth-child(4) { background-image: url("/icons/portal_pink.svg"); }
+#typeButtons > div:nth-child(1) { background-image: url("/static/icons/gym.svg"); }
+#typeButtons > div:nth-child(2) { background-image: url("/static/icons/pokestop_blue.svg"); }
+#typeButtons > div:nth-child(3) { background-image: url("/static/icons/question_mark.svg"); }
+#typeButtons > div:nth-child(4) { background-image: url("/static/icons/portal_pink.svg"); }
 
 
-#eligibleButtons > div:nth-child(1) { background-image: url("/icons/star_gold.svg"); }
-#eligibleButtons > div:nth-child(2) { background-image: url("/icons/star_white.svg"); }
+#eligibleButtons > div:nth-child(1) { background-image: url("/static/icons/star_gold.svg"); }
+#eligibleButtons > div:nth-child(2) { background-image: url("/static/icons/star_white.svg"); }

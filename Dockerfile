@@ -4,6 +4,7 @@ RUN mkdir /app
 WORKDIR /app
 COPY app/ ./
 
+RUN apk add gcc python3-dev musl-dev postgresql-dev
 #RUN python -m pip install --upgrade pip
 RUN pip install -r ./requirements.txt
 
