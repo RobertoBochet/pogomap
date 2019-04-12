@@ -311,7 +311,7 @@ class Enviroment
 	initEditor()
 	{
 		let self = this;
-		if(key !== "") {
+		if(typeof key != "undefined") {
 			$.getJSON("/getentities/unverified/", function(data) {
 				if(data.status == "ok") {
 					for(let o of data.entities) {

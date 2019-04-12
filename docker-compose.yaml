@@ -4,14 +4,13 @@ services:
   server:
     build: ./
     environment:
-      - DB_HOST=db
-      - DB_PORT=7676
+      - DB_HOST=db:7676
       - DB_NAME=pogomap
-      - DB_USER=root
+      - DB_USER=postgres
       - DB_PASS=NjNXFh2XVJgsBY36
     restart: always
     ports:
-      - "127.0.0.1:5775:5775/tcp"
+      - "127.0.0.1:57756:5775/tcp"
     volumes:
       - /mnt/data/pogomap/map/layers:/app/templates/layers
     depends_on:

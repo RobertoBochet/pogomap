@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory, redirect
 from flask_reggie import Reggie
 from pogomap import PogoMap
 import json
 import time
+import logging
+import signal
+import sys
 
 reggie = Reggie()
 app = Flask(__name__)
@@ -24,21 +27,25 @@ def map_key(key):
 @app.route('/')
 def map():
 	return render_template("index.html")
-	
-if __name__ == '__main__':
-	while False:
-		try:
-			pogomap = PogoMap(
-				db_host = os.environ["DB_HOST"],
-				db_port = os.environ["DB_PORT"],
-				db_user = os.environ["DB_USER"],
-				db_pass = os.environ["DB_PASS"],
-				db_name = os.environ["DB_NAME"]
-			)
-			print("connected")
-			break
-		except:
-#            print("waiting to connection")
-			time.sleep(1)
 
-	app.run(debug=True,host='0.0.0.0',port=5775)
+@app.route('/favicon.ico')
+def favicon():
+    return redirect("/static/favicon/favicon.ico", code=301)
+    #return send_from_directory(os.path.join(app.root_path, "static"), "favicon.ico")
+
+
+def signal_handler(sig, frame):
+        print('You pressed Ctrl+C!')
+        sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
+if __name__ == '__main__':
+	logging.basicConfig(level=logging.DEBUG, format="[%(levelname)s] %(message)s")
+
+	pogomap = PogoMap(
+		db_host = os.environ["DB_HOST"],
+		db_user = os.environ["DB_USER"],
+		db_pass = os.environ["DB_PASS"],
+		db_name = os.environ["DB_NAME"]
+	)
+
+	app.run(debug=False,host='0.0.0.0',port=5775)
