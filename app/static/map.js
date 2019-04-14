@@ -312,14 +312,14 @@ class Enviroment
 	{
 		let self = this;
 		if(typeof key != "undefined") {
-			$.getJSON("/getentities/unverified/", function(data) {
+			$.getJSON("/get_entities/unverified/", function(data) {
 				if(data.done == true) {
 					for(let o of data.entities) {
 						self.entities.push(new Unverified(o));
 					}
 				} else console.error("Error");
 			});
-			$.getJSON("/getentities/not_in_pogo/", function(data) {
+			$.getJSON("/get_entities/not_in_pogo/", function(data) {
 				if(data.done == true) {
 					for(let o of data.entities) {
 						self.entities.push(new Entity(o));
@@ -402,7 +402,7 @@ class Enviroment
 	fetch()
 	{
 		let self = this;
-		$.getJSON("/getentities/in_pogo/", function(data) {
+		$.getJSON("/get_entities/in_pogo/", function(data) {
 			if(data.done == true) {
 				for(let o of data.entities) {
 					self.entities.push(new Entity(o));
@@ -417,235 +417,3 @@ window.addEventListener("load", () => {
 });
 
 })();
-
-
-
-
-
-
-
-
-// let foo = () => {
-// 	map = new google.maps.Map(document.querySelector("#map"), {
-// 		zoom: 15,
-//  		center: new google.maps.LatLng(45.309552, 9.504114),
-//  		mapTypeId: google.maps.MapTypeId.HYBRID,
-// 		zoomControl: false,
-// 		disableDefaultUI: true,
-// 		clickableIcons: false
-// 	});
-	
-// 	/*InfoSpaces*/
-// 	infoSpaces.imageContainer = document.createElement("div");
-// 	infoSpaces.image = document.createElement("img");
-// 	infoSpaces.imageContainer.classList.add("container");
-// 	infoSpaces.imageContainer.append(infoSpaces.image);
-// 	infoSpaces.image.id = "image";
-// 	infoSpaces.image.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
-
-// 	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(infoSpaces.imageContainer);
-
-// 	infoSpaces.nameContainer = document.createElement("div");
-// 	infoSpaces.name = document.createElement("div");
-// 	infoSpaces.nameContainer.classList.add("container");
-// 	infoSpaces.nameContainer.append(infoSpaces.name);
-// 	infoSpaces.nameContainer.id = "nameContainer";
-// 	infoSpaces.name.id = "name";
-
-// 	map.controls[google.maps.ControlPosition.TOP_CENTER].push(infoSpaces.nameContainer);
-
-// 	/*Grids buttons*/
-// 	controlButtons.grids = {
-// 		container: document.createElement("div"),
-// 		small: document.createElement("div"),
-// 		big: document.createElement("div")
-// 	};
-// 	controlButtons.grids.container.append(controlButtons.grids.big);
-// 	controlButtons.grids.container.append(controlButtons.grids.small);
-// 	controlButtons.grids.container.classList.add("buttonsContainer");
-// 	controlButtons.grids.container.id = "gridButtons";
-
-// 	controlButtons.grids.small.addEventListener("click", () => {
-// 		if(layers.s2cells.small.isHide) layers.s2cells.small.show();
-// 		else layers.s2cells.small.hide();
-// 	});
-// 	controlButtons.grids.big.addEventListener("click", () => {
-// 		if(layers.s2cells.big.isHide) layers.s2cells.big.show();
-// 		else layers.s2cells.big.hide();
-// 	});
-
-// 	map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlButtons.grids.container);
-
-// 	/*Grids buttons*/
-// 	controlButtons.nests = {
-// 		container: document.createElement("div"),
-// 		nests: document.createElement("div")
-// 	};
-// 	controlButtons.nests.container.append(controlButtons.nests.nests);
-// 	controlButtons.nests.container.classList.add("buttonsContainer");
-// 	controlButtons.nests.nests.id = "nestsButton";
-// 	controlButtons.nests.nests.addEventListener("click", () => {
-// 		if(layers.nests.isHide) layers.nests.show();
-// 		else layers.nests.hide();
-// 	});
-
-// 	map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlButtons.nests.container);
-
-
-// 	/*Grids layers*/
-// 	layers.s2cells = {};
-// 	layers.s2cells.small = new DataLayer();
-// 	layers.s2cells.big = new DataLayer();
-
-// 	let s17 = new google.maps.Data();
-// 	let s14 = new google.maps.Data();
-// 	let s13 = new google.maps.Data();
-
-// 	s17.setStyle({
-// 		fillColor: 'transparent',
-// 		strokeColor: "#AAAAAA",
-// 		strokeWeight: 1,
-// 		zIndex: 1
-// 	});
-// 	s14.setStyle({
-// 		fillColor: 'transparent',
-// 		strokeColor: "green",
-// 		strokeWeight: 3,
-// 		zIndex:5
-// 	});
-// 	s13.setStyle({
-// 		fillColor: 'transparent',
-// 		strokeColor: "red",
-// 		strokeWeight: 5,
-// 		zIndex: 10
-// 	});
-
-// 	s17.loadGeoJson("/layers/s2cells/17.geojson");
-// 	s14.loadGeoJson("/layers/s2cells/14.geojson");
-// 	s13.loadGeoJson("/layers/s2cells/13.geojson");
-
-// 	layers.s2cells.small.data = [s14, s17];
-// 	layers.s2cells.big.data = [s13];
-
-
-// 	/*Nests layers*/
-// 	layers.nests = new DataLayer();
-
-// 	let nests = new google.maps.Data();
-
-// 	nests.setStyle({
-// 		fillColor: "green",
-// 		fillOpacity: 0.6,
-// 		strokeColor: "green",
-// 		strokeWeight: 3,
-// 		zIndex:5
-// 	});
-
-// 	nests.loadGeoJson("/layers/nests.geojson");
-
-// 	layers.nests.data = [nests];
-
-	
-// 	/*Initial fetch*/
-// 	$.getJSON("/getentities.php?type=inpogo", function(data) {
-// 		if(data.status == "ok") {
-// 			for(let o of data.entities) {
-// 				entities.push(new Entity(o));
-// 			}
-// 		} else console.error("Error");
-// 	});
-
-// 	/*Edit mode*/
-// 	if(key !== "") {
-// 		/*Fetch portals*/
-// 		$.getJSON("/getentities.php?type=unverified", function(data) {
-// 			if(data.status == "ok") {
-// 				for(let o of data.entities) {
-// 					entities.push(new Unverified(o));
-// 				}
-// 			} else console.error("Error");
-// 		});
-// 		$.getJSON("/getentities.php?type=notinpogo", function(data) {
-// 			if(data.status == "ok") {
-// 				for(let o of data.entities) {
-// 					entities.push(new Entity(o));
-// 				}
-// 			} else console.error("Error");
-// 		});
-
-// 		/*Update*/
-// 		let update = (obj) => {
-// 			if(obj.type === undefined && obj.isEligible === undefined) {console.error("Error");return;}
-// 			if(obj.type !== undefined && obj.type === currentEntity.type) return;
-// 			if(obj.isEligible !== undefined && obj.isEligible === currentEntity.isEligible) return;
-
-// 			$.getJSON("/setentities.php", {
-// 				key: key,
-// 				id: currentEntity.id,
-// 				type: ((obj.type !== undefined)?obj.type:currentEntity.type),
-// 				isEligible: + ((obj.isEligible !== undefined)?obj.isEligible:currentEntity.isEligible)
-// 			}, 
-// 			(data) => {
-// 				if(data.status == "ok") {
-// 					if(data.entity.type === undefined) data.entity = new Unverified(data.entity);
-// 					else data.entity = new Entity(data.entity);
-					
-// 					currentEntity.hide();
-// 					entities.filter((entity) => { return currentEntity.id === data.entity.id });
-
-// 					entities.push(data.entity);
-// 					data.entity.updateInfobox();
-// 				} else console.error("Error");
-// 			});
-// 		};
-
-// 		/*Type buttons*/
-// 		editorButtons.type = {
-// 			container: document.createElement("div"),
-// 			gym: document.createElement("div"),
-// 			pokestop: document.createElement("div"),
-// 			unverified: document.createElement("div"),
-// 			notInPogo: document.createElement("div")
-// 		};
-// 		editorButtons.type.container.append(editorButtons.type.gym);
-// 		editorButtons.type.container.append(editorButtons.type.pokestop);
-// 		editorButtons.type.container.append(editorButtons.type.unverified);
-// 		editorButtons.type.container.append(editorButtons.type.notInPogo);
-// 		editorButtons.type.container.classList.add("buttonsContainer");
-// 		editorButtons.type.container.classList.add("buttonsContainerSelectable");
-// 		editorButtons.type.container.id = "typeButtons";
-// 		editorButtons.type.pokestop.addEventListener("click", ()=>{update({type:"pokestop"});});
-// 		editorButtons.type.gym.addEventListener("click", ()=>{update({type:"gym"});});
-// 		editorButtons.type.unverified.addEventListener("click", ()=>{update({type:"unverified"});});
-// 		editorButtons.type.notInPogo.addEventListener("click", ()=>{update({type:"none"});});
-
-// 		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(editorButtons.type.container);
-
-// 		/*Eligible buttons*/
-// 		editorButtons.eligible = {
-// 			container: document.createElement("div"),
-// 			eligible: document.createElement("div"),
-// 			notEligible: document.createElement("div")
-// 		};
-// 		editorButtons.eligible.container.append(editorButtons.eligible.eligible);
-// 		editorButtons.eligible.container.append(editorButtons.eligible.notEligible);
-// 		editorButtons.eligible.container.classList.add("buttonsContainer");
-// 		editorButtons.eligible.container.classList.add("buttonsContainerSelectable");
-// 		editorButtons.eligible.container.id = "eligibleButtons";
-// 		editorButtons.eligible.eligible.addEventListener("click", ()=>{update({isEligible:true});});
-// 		editorButtons.eligible.notEligible.addEventListener("click", ()=>{update({isEligible:false});});
-
-// 		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(editorButtons.eligible.container);
-// 	}
-
-// 	/*User position*/
-// 	if (navigator.geolocation) {
-// 		navigator.geolocation.getCurrentPosition(function(position) {
-// 			var pos = {
-// 				lat: position.coords.latitude,
-// 				lng: position.coords.longitude
-// 			};
-// 			map.setCenter(pos);
-// 		});
-// 	}
-// };

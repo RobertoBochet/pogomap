@@ -14,7 +14,7 @@ app = Flask(__name__)
 reggie.init_app(app)
 
 
-@app.route("/getentities/<regex('(gyms(_eligible)?)|(pokestop(_eligible)?)|((not_)?in_pogo)|unverified'):type>/")
+@app.route("/get_entities/<regex('(gyms(_eligible)?)|(pokestop(_eligible)?)|((not_)?in_pogo)|unverified'):type>/")
 def get_entities(type):
 	respose = pogomap.query(type)
 	return respose.json
