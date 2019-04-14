@@ -10,7 +10,7 @@ services:
       - DB_PASS=NjNXFh2XVJgsBY36
     restart: always
     ports:
-      - "127.0.0.1:57756:5775/tcp"
+      - "127.0.0.1:5775:5775/tcp"
     volumes:
       - /mnt/data/pogomap/map/layers:/app/templates/layers
     depends_on:
