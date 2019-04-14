@@ -4,7 +4,7 @@ services:
   server:
     build: ./
     environment:
-      - DB_HOST=db:7676
+      - DB_HOST=db:5432
       - DB_NAME=pogomap
       - DB_USER=postgres
       - DB_PASS=NjNXFh2XVJgsBY36
@@ -24,5 +24,3 @@ services:
     volumes:
       - /mnt/data/pogomap/db:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
-    ports:
-      - "127.0.0.1:7676:5432"
