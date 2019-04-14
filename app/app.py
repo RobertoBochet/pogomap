@@ -16,9 +16,8 @@ reggie.init_app(app)
 
 @app.route("/getentities/<regex('(gyms(_eligible)?)|(pokestop(_eligible)?)|((not)?inpogo)|unverified'):type>/")
 def get_entities(type):
-	respose = None
-	return json.dumps(respose)
-
+	respose = pogomap.query(type)
+	return respose.json
 
 @app.route("/<regex('[0-9a-zA-Z]+'):key>/")
 def map_key(key):
@@ -31,7 +30,6 @@ def map():
 @app.route('/favicon.ico')
 def favicon():
     return redirect("/static/favicon/favicon.ico", code=301)
-    #return send_from_directory(os.path.join(app.root_path, "static"), "favicon.ico")
 
 
 def signal_handler(sig, frame):

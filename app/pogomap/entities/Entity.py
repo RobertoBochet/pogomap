@@ -22,4 +22,12 @@ class Entity:
 	@property
 	def type(self):
 		return self.data["type"]
+
+	@staticmethod
+	def make(ent):
+		pass
 	
+	def __json__(self):
+		return self.data
+
+	for_json = __json__
