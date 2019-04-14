@@ -1,3 +1,4 @@
 **/__pycache__/
-/app/static/layers/**.geojson
-/sql/[7-9]*.sql
+/app/static/layers/**/*.geojson
+/sql/*
+!/sql/[0-6]-*.sql
