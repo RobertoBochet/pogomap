@@ -26,7 +26,7 @@ FROM
 WHERE
     "gyms"."is_eligible" = TRUE;
 
-CREATE VIEW "inpogo" AS
+CREATE VIEW "in_pogo" AS
 SELECT
     "portals"."id" AS "id",
     "portals"."latitude" AS "latitude",
@@ -42,7 +42,7 @@ FROM
 WHERE
     "entities"."type" <> 'none';
 
-CREATE VIEW "notinpogo" AS
+CREATE VIEW "not_in_pogo" AS
 SELECT
     "portals"."id" AS "id",
     "portals"."latitude" AS "latitude",

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from .Response import Response
 from .DBRequest import DBRequest
-from .entities import Entity, Portal, Gym
+from .entities import Entity, Portal, Pokestop, Gym
 import sqlalchemy
 import time
 import logging
@@ -32,23 +32,61 @@ class PogoMap:
 		
 		logging.error("Failed to connect to db")
 
+
+	@property
+	def unverified(self):
+		req = DBRequest(self.db, "unverified")
+		for r in req.get():
+			yield Portal(r)
+
+	@property
+	def verified(self):
+		req = DBRequest(self.db, "verified")
+		for r in req.get():
+			yield Portal(r)
+
+	@property
+	def not_in_pogo(self):
+		req = DBRequest(self.db, "not_in_pogo")
+		for r in req.get():
+			yield Portal(r)
+
+	@property
+	def in_pogo(self):
+		req = DBRequest(self.db, "in_pogo")
+		for r in req.get():
+			yield Portal(r)
+
+
+	@property
+	def portals(self):
+		req = DBRequest(self.db, "portals")
+		for r in req.get():
+			yield Portal(r)
+
+	@property
+	def portals_eligible(self):
+		req = DBRequest(self.db, "portals_eligible")
+		for r in req.get():
+			yield Portal(r)
+
+
 	@property
 	def pokestops(self):
-		with self.db.connect() as connection:
-			result = connection.execute("SELECT * FROM pokestops")
-			for r in result:
-				yield Gym(r)
+		req = DBRequest(self.db, "pokestops")
+		for r in req.get():
+			yield Pokestop(r)
 
 	@property
 	def pokestops_eligible(self):
-		with self.db.connect() as connection:
-			result = connection.execute("SELECT * FROM pokestops_eligible")
-			for r in result:
-				yield Gym(r)
+		req = DBRequest(self.db, "pokestops_eligible")
+		for r in req.get():
+			yield Pokestop(r)
+
 
 	@property
 	def gyms(self):
-		req = DBRequest(self.db, "gyms_eligible")
+		req = DBRequest(self.db, "gyms")
 		for r in req.get():
 			yield Gym(r)
 
@@ -58,10 +96,19 @@ class PogoMap:
 		for r in req.get():
 			yield Gym(r)
 
+
 	def query(self, query):
 		entities = None
 		try:
-			if query == "pokestops":
+			if query == "unverified":
+				entities = self.pokestops
+			if query == "verified":
+				entities = self.pokestops
+			elif query == "notinpogo":
+				entities = self.pokestops
+			elif query == "inpogo":
+				entities = self.pokestops
+			elif query == "pokestops":
 				entities = self.pokestops
 			elif query == "pokestops_eligible":
 				entities = self.pokestops_eligible
