@@ -313,14 +313,14 @@ class Enviroment
 		let self = this;
 		if(typeof key != "undefined") {
 			$.getJSON("/getentities/unverified/", function(data) {
-				if(data.status == "ok") {
+				if(data.done == true) {
 					for(let o of data.entities) {
 						self.entities.push(new Unverified(o));
 					}
 				} else console.error("Error");
 			});
 			$.getJSON("/getentities/notinpogo/", function(data) {
-				if(data.status == "ok") {
+				if(data.done == true) {
 					for(let o of data.entities) {
 						self.entities.push(new Entity(o));
 					}
@@ -386,7 +386,7 @@ class Enviroment
 			isEligible: + ((obj.isEligible !== undefined) ? obj.isEligible : this.currentEntity.isEligible)
 		}, 
 		(data) => {
-			if(data.status == "ok") {
+			if(data.done == true) {
 				if(data.entity.type === undefined) data.entity = new Unverified(data.entity);
 				else data.entity = new Entity(data.entity);
 				
@@ -403,7 +403,7 @@ class Enviroment
 	{
 		let self = this;
 		$.getJSON("/getentities/inpogo/", function(data) {
-			if(data.status == "ok") {
+			if(data.done == true) {
 				for(let o of data.entities) {
 					self.entities.push(new Entity(o));
 				}
