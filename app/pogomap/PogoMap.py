@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from .Response import Response
 from .DBRequest import DBRequest
-from .entities import Entity, Portal, Pokestop, Gym
+from .entities import Entity, Portal, Pokestop, Gym, mkentity
 import sqlalchemy
 import time
 import logging
@@ -37,13 +37,13 @@ class PogoMap:
 	def unverified(self):
 		req = DBRequest(self.db, "unverified")
 		for r in req.get():
-			yield Portal(r)
+			yield mkentity(r)
 
 	@property
 	def verified(self):
 		req = DBRequest(self.db, "verified")
 		for r in req.get():
-			yield Portal(r)
+			yield mkentity(r)
 
 	@property
 	def not_in_pogo(self):
@@ -55,7 +55,7 @@ class PogoMap:
 	def in_pogo(self):
 		req = DBRequest(self.db, "in_pogo")
 		for r in req.get():
-			yield Portal(r)
+			yield mkentity(r)
 
 
 	@property
@@ -101,13 +101,13 @@ class PogoMap:
 		entities = None
 		try:
 			if query == "unverified":
-				entities = self.pokestops
+				entities = self.unverified
 			if query == "verified":
-				entities = self.pokestops
-			elif query == "notinpogo":
-				entities = self.pokestops
-			elif query == "inpogo":
-				entities = self.pokestops
+				entities = self.verified
+			elif query == "not_in_pogo":
+				entities = self.not_in_pogo
+			elif query == "in_pogo":
+				entities = self.in_pogo
 			elif query == "pokestops":
 				entities = self.pokestops
 			elif query == "pokestops_eligible":

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-from . import Entity
+from ..entities import Entity
 
 class Gym(Entity):
-	pass
+	
+	@property
+	def type(self):
+		return "gym"

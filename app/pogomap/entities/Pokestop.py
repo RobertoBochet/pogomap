@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-from . import Entity
+from .Entity import Entity
 
 class Pokestop(Entity):
-	pass
+	@property
+	def type(self):
+		return "pokestop"

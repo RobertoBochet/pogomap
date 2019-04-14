@@ -319,7 +319,7 @@ class Enviroment
 					}
 				} else console.error("Error");
 			});
-			$.getJSON("/getentities/notinpogo/", function(data) {
+			$.getJSON("/getentities/not_in_pogo/", function(data) {
 				if(data.done == true) {
 					for(let o of data.entities) {
 						self.entities.push(new Entity(o));
@@ -379,7 +379,7 @@ class Enviroment
 		if(obj.type !== undefined && obj.type === this.currentEntity.type) return;
 		if(obj.isEligible !== undefined && obj.isEligible === this.currentEntity.isEligible) return;
 
-		$.getJSON("/setentities/", {
+		$.getJSON("/set_entities/", {
 			key: key,
 			id: this.currentEntity.id,
 			type: ((obj.type !== undefined) ? obj.type : this.currentEntity.type),
@@ -402,7 +402,7 @@ class Enviroment
 	fetch()
 	{
 		let self = this;
-		$.getJSON("/getentities/inpogo/", function(data) {
+		$.getJSON("/getentities/in_pogo/", function(data) {
 			if(data.done == true) {
 				for(let o of data.entities) {
 					self.entities.push(new Entity(o));

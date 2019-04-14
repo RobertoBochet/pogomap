@@ -21,12 +21,11 @@ class Entity:
 		return self.data["guid"]
 	@property
 	def type(self):
-		return self.data["type"]
+		return self.data["type"]	
+	@property
+	def eligible(self):
+		return self.data["eligible"]
 
-	@staticmethod
-	def make(ent):
-		pass
-	
 	def __json__(self):
 		return self.data
 

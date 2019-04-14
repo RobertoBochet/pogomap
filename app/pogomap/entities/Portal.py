@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from . import Entity
+from .Entity import Entity
 
 class Portal(Entity):
 	@property
