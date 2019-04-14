@@ -14,12 +14,12 @@ app = Flask(__name__)
 reggie.init_app(app)
 
 
-@app.route("/getentities/<regex('(gyms(_eligible)?)|(pokestop(_eligible)?)|((not)?inpogo)|unverified'):type>/")
+@app.route("/getentities/<regex('(gyms(_eligible)?)|(pokestop(_eligible)?)|((not_)?in_pogo)|unverified'):type>/")
 def get_entities(type):
 	respose = pogomap.query(type)
 	return respose.json
 
-@app.route("/<regex('[0-9a-zA-Z]+'):key>/")
+@app.route("/<regex('[0-9a-zA-Z]{32}'):key>/")
 def map_key(key):
 	return render_template("index.html",key=key)
 
