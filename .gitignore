@@ -2,3 +2,5 @@
 /app/static/layers/**/*.geojson
 /sql/*
 !/sql/[0-6]-*.sql
+/data/
+/.idea/
