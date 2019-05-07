@@ -12,7 +12,7 @@ services:
     ports:
       - "127.0.0.1:5775:5775/tcp"
     volumes:
-      - ./data/map/layers:/app/templates/layers
+      - /srv/pogomap/map/layers:/app/templates/layers
     depends_on:
       - db
   db:
@@ -22,5 +22,5 @@ services:
       - POSTGRES_PASSWORD=NjNXFh2XVJgsBY36
       - POSTGRES_DB=pogomap
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - /srv/pogomap/db:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
