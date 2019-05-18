@@ -10,7 +10,7 @@ services:
       - DB_USER=postgres
       - DB_PASS=NjNXFh2XVJgsBY36
     ports:
-      - "127.0.0.1:5775:5775/tcp"
+      - "127.0.0.1:5775:5000/tcp"
     volumes:
       - /srv/pogomap/map/layers:/app/static/layers
     depends_on:
