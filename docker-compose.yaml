@@ -16,11 +16,10 @@ services:
     depends_on:
       - db
   db:
-    image: mdillon/postgis:11-alpine
+    build: ./db
     restart: always
     environment:
       - POSTGRES_PASSWORD=NjNXFh2XVJgsBY36
       - POSTGRES_DB=pogomap
     volumes:
       - /srv/pogomap/db:/var/lib/postgresql/data
-      - ./sql:/docker-entrypoint-initdb.d
