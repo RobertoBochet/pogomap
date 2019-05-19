@@ -21,7 +21,10 @@ def get_entities(type):
 
 @app.route("/<regex('[0-9a-zA-Z]{32}'):key>/")
 def map_key(key):
-    return render_template("index.html", key=key)
+    if pogomap.is_editor_key_valid(key):
+        return render_template("index.html", key=key)
+    else:
+        return "Key is not valid"
 
 
 @app.route("/")
