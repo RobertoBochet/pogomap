@@ -12,7 +12,6 @@ services:
     ports:
       - "127.0.0.1:5775:5000/tcp"
     volumes:
-      - ./service/app:/app
       - /srv/pogomap/map/layers:/app/static/layers
     depends_on:
       - db

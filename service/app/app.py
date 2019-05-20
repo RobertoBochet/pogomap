@@ -4,6 +4,7 @@ import os
 
 import flask
 import flask_reggie
+
 from Response import Response
 from pogomap import PogoMap
 from pogomap.exceptions import *
