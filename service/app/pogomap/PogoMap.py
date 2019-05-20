@@ -1,12 +1,13 @@
-from .Response import Response
-from .DBRequest import DBRequest
-from .entities import Entity, Portal, Pokestop, Gym, mkentity
-from . import tables
-from sqlalchemy.orm.session import sessionmaker
-from sqlalchemy import func
-import sqlalchemy
-import time
 import logging
+import time
+
+import sqlalchemy
+from sqlalchemy.orm.session import sessionmaker
+
+from . import tables
+from .DBRequest import DBRequest
+from .entities import *
+from .exceptions import *
 
 
 class PogoMap:
@@ -14,6 +15,29 @@ class PogoMap:
         self.db = sqlalchemy.create_engine("postgresql://{}:{}@{}/{}".format(db_user, db_pass, db_host, db_name))
         self.Session = sessionmaker(bind=self.db, autocommit=True)
         self.wait_db()
+
+        self.VALID_ENTITIES = [
+            "unverified",
+            "verified",
+            "not_in_pogo",
+            "in_pogo",
+            "portals",
+            "pokestops",
+            "pokestops_eligible",
+            "gyms",
+            "gyms_eligible"
+        ]
+        self.GET_ENTITIES = {
+            "unverified": self.get_unverified,
+            "verified": self.get_verified,
+            "not_in_pogo": self.get_not_in_pogo,
+            "in_pogo": self.get_in_pogo,
+            "portals": self.get_portals,
+            "pokestops": self.get_pokestops,
+            "pokestops_eligible": self.get_pokestops_eligible,
+            "gyms": self.get_gyms,
+            "gyms_eligible": self.get_gyms_eligible
+        }
 
     def wait_db(self):
         logging.info("Try to connect to db")
@@ -34,89 +58,63 @@ class PogoMap:
 
         logging.error("Failed to connect to db")
 
-    @property
-    def unverified(self):
+    def get_unverified(self):
         req = DBRequest(self.db, "unverified")
         for r in req.get():
-            yield mkentity(r)
+            yield Unverified(**r)
 
-    @property
-    def verified(self):
+    def get_verified(self):
         req = DBRequest(self.db, "verified")
         for r in req.get():
-            yield mkentity(r)
+            yield Entity(**r)
 
-    @property
-    def not_in_pogo(self):
+    def get_not_in_pogo(self):
         req = DBRequest(self.db, "not_in_pogo")
         for r in req.get():
-            yield Portal(r)
+            yield Portal(**r)
 
-    @property
-    def in_pogo(self):
+    def get_in_pogo(self):
         req = DBRequest(self.db, "in_pogo")
         for r in req.get():
-            yield mkentity(r)
+            yield Entity(**r)
 
-    @property
-    def portals(self):
+    def get_portals(self):
         req = DBRequest(self.db, "portals")
         for r in req.get():
-            yield Portal(r)
+            yield Portal(**r)
 
-    @property
-    def portals_eligible(self):
+    def get_portals_eligible(self):
         req = DBRequest(self.db, "portals_eligible")
         for r in req.get():
-            yield Portal(r)
+            yield Portal(**r)
 
-    @property
-    def pokestops(self):
+    def get_pokestops(self):
         req = DBRequest(self.db, "pokestops")
         for r in req.get():
-            yield Pokestop(r)
+            yield Pokestop(**r)
 
-    @property
-    def pokestops_eligible(self):
+    def get_pokestops_eligible(self):
         req = DBRequest(self.db, "pokestops_eligible")
         for r in req.get():
-            yield Pokestop(r)
+            yield Pokestop(**r)
 
-    @property
-    def gyms(self):
+    def get_gyms(self):
         req = DBRequest(self.db, "gyms")
         for r in req.get():
-            yield Gym(r)
+            yield Gym(**r)
 
-    @property
-    def gyms_eligible(self):
+    def get_gyms_eligible(self):
         req = DBRequest(self.db, "gyms_eligible")
         for r in req.get():
-            yield Gym(r)
+            yield Gym(**r)
 
-    def query(self, query):
-        entities = None
-        try:
-            if query == "unverified":
-                entities = self.unverified
-            if query == "verified":
-                entities = self.verified
-            elif query == "not_in_pogo":
-                entities = self.not_in_pogo
-            elif query == "in_pogo":
-                entities = self.in_pogo
-            elif query == "pokestops":
-                entities = self.pokestops
-            elif query == "pokestops_eligible":
-                entities = self.pokestops_eligible
-            elif query == "gyms":
-                entities = self.gyms
-            elif query == "gyms_eligible":
-                entities = self.gyms_eligible
-        except Exception:
-            return Response(error="no")
+    def get_entities(self, type):
+        logging.info("Get entities {}".format(type))
 
-        return Response(entities)
+        if not type in self.GET_ENTITIES:
+            raise InvalidEntity()
+
+        return self.GET_ENTITIES[type]()
 
     def is_editor_key_valid(self, key):
         session = self.Session()

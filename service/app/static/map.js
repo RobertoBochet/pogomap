@@ -23,7 +23,7 @@ class Entity
 		this.isEligible = (obj.isEligible === undefined) ? false : Boolean(obj.isEligible);
 		
 		switch(this.type) {
-			case "none": this.icon = Entity.icons.portal; break;
+			case "portal": this.icon = Entity.icons.portal; break;
 			case "pokestop": this.icon = Entity.icons.pokestop; break;
 			case "gym":	this.icon = (this.isEligible) ? Entity.icons.gymEligible : Entity.icons.gym; break;
 			case "unverified": this.icon = Entity.icons.unverified; break;
@@ -53,7 +53,7 @@ class Entity
 				case "gym": Entity.env.editorButtons.type.gym.classList.add("selected"); break;
 				case "pokestop": Entity.env.editorButtons.type.pokestop.classList.add("selected"); break;
 				case "unverified": Entity.env.editorButtons.type.unverified.classList.add("selected"); break;
-				case "none": Entity.env.editorButtons.type.notInPogo.classList.add("selected"); break;
+				case "portal": Entity.env.editorButtons.type.notInPogo.classList.add("selected"); break;
 			}
 			switch(this.isEligible) {
 				case true: Entity.env.editorButtons.eligible.eligible.classList.add("selected"); break;

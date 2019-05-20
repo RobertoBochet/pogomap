@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
-from ..entities import Entity
+from dataclasses import dataclass
 
+from .Entity import Entity
+
+
+@dataclass
 class Gym(Entity):
-	
-	@property
-	def type(self):
-		return "gym"
+    type: str = "gym"

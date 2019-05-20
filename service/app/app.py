@@ -1,40 +1,52 @@
 #!/usr/bin/env python3
-import os
-from flask import Flask, render_template, send_from_directory, redirect
-from flask_reggie import Reggie
-from pogomap import PogoMap
-import json
-import time
 import logging
-import signal
-import sys
+import os
 
-app = Flask(__name__)
-Reggie(app)
+import flask
+import flask_reggie
+from Response import Response
+from pogomap import PogoMap
+from pogomap.exceptions import *
+
+app = flask.Flask(__name__)
+flask_reggie.Reggie(app)
 
 
-@app.route("/get_entities/<regex('(gyms(_eligible)?)|(pokestop(_eligible)?)|((not_)?in_pogo)|unverified'):type>/")
-def get_entities(type):
-    response = pogomap.query(type)
-    return response.json
+@app.route("/get_entities/<string:entity_type>/")
+def get_entities(entity_type=None):
+    try:
+        entities = pogomap.get_entities(entity_type)
+
+        response = Response(payload=entities, payload_name="entities")
+
+    except InvalidEntity as e:
+        logging.info("Exception {}".format(type(e).__name__))
+        response = Response(exception=e)
+
+    return app.response_class(response=response.to_json(), mimetype="application/json")
+
+
+@app.route("/set_entities/")
+def set_entities():
+    return "ciao"
 
 
 @app.route("/<regex('[0-9a-zA-Z]{32}'):key>/")
 def map_key(key):
     if pogomap.is_editor_key_valid(key):
-        return render_template("index.html", key=key)
+        return flask.render_template("index.html", key=key)
     else:
         return "Key is not valid"
 
 
 @app.route("/")
 def map():
-    return render_template("index.html")
+    return flask.render_template("index.html")
 
 
 @app.route("/favicon.ico")
 def favicon():
-    return redirect("/static/favicon/favicon.ico", code=301)
+    return flask.redirect("/static/favicon/favicon.ico", code=301)
 
 
 logging.basicConfig(level=logging.DEBUG, format="[%(levelname)s] %(message)s")

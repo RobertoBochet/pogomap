@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-
 from .Entity import Entity
-from .Portal import Portal
-from .Pokestop import Pokestop
+from .Unverified import Unverified
 from .Gym import Gym
-
-from .mkentity import mkentity
+from .Pokestop import Pokestop
+from .Portal import Portal

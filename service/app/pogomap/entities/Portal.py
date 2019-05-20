@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
+from dataclasses import dataclass
+
 from .Entity import Entity
 
+
+@dataclass
 class Portal(Entity):
-	@property
-	def type(self):
-		return "portal"
+    type: str = "portal"

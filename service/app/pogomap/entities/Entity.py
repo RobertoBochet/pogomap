@@ -1,32 +1,13 @@
-#!/usr/bin/env python3
+from dataclasses import dataclass, asdict
 
+
+@dataclass
 class Entity:
-	def __init__(self, data):
-		self.data = data
-
-	@property
-	def id(self):
-		return self.data["id"]
-	@property
-	def name(self):
-		return self.data["name"]
-	@property
-	def latitude(self):
-		return self.data["latitude"]
-	@property
-	def longitude(self):
-		return self.data["longitude"]
-	@property
-	def guid(self):
-		return self.data["guid"]
-	@property
-	def type(self):
-		return self.data["type"]	
-	@property
-	def eligible(self):
-		return self.data["eligible"]
-
-	def __json__(self):
-		return self.data
-
-	for_json = __json__
+    id: int
+    name: str
+    latitude: float
+    longitude: float
+    image: str
+    guid: str
+    type: str
+    is_eligible: bool = False

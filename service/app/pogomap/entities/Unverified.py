@@ -4,5 +4,5 @@ from .Entity import Entity
 
 
 @dataclass
-class Pokestop(Entity):
-    type: str = "pokestop"
+class Unverified(Entity):
+    type: str = "unverified"
