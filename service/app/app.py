@@ -5,7 +5,7 @@ import os
 import flask
 import flask_reggie
 
-from Response import Response
+from ResponseJSON import ResponseJSON
 from pogomap import PogoMap
 from pogomap.exceptions import *
 
@@ -18,17 +18,21 @@ def get_entities(entity_type=None):
     try:
         entities = pogomap.get_entities(entity_type)
 
-        response = Response(payload=entities, payload_name="entities")
+        return ResponseJSON(payload=entities, payload_name="entities")
 
     except InvalidEntity as e:
         logging.info("Exception {}".format(type(e).__name__))
-        response = Response(exception=e)
-
-    return app.response_class(response=response.to_json(), mimetype="application/json")
+        return ResponseJSON(exception=e)
 
 
-@app.route("/set_entities/")
+@app.route("/set_entities/", methods=["POST"])
 def set_entities():
+    if "key" not in flask.request.form:
+        return ResponseJSON(error="Must be provided an authentication key")
+
+    if not pogomap.is_editor_key_valid(flask.request.form["key"]):
+        return ResponseJSON(error="Invalid authentication key").to_json()
+
     return "ciao"
 
 

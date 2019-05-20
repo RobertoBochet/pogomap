@@ -1,14 +1,18 @@
 import inspect
 
 import simplejson
+import flask
 
+class ResponseJSON(flask.Response):
+    default_mimetype = "application/json"
 
-class Response:
     def __init__(self, payload=None, payload_name="payload", error=None, exception=None):
         self.payload = payload
         self.payload_name = payload_name
         self.error = error
         self.exception = exception
+
+        super(ResponseJSON, self).__init__(response=self.to_json())
 
     def to_obj(self):
         obj = {}
