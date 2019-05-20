@@ -19,3 +19,8 @@ if __name__ == "__main__":
 
     for i in GET_ENTITIES:
         list(pogomap.get_entities(i))
+
+
+    a=pogomap.set_entity(117961,"pokestop", False)
+    b=pogomap.set_entity(222371,"gym", False)
+    c=pogomap.set_entity(107930,"unverified", False)

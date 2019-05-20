@@ -7,6 +7,12 @@ editor_keys = Table("editorkeys", metadata,
                     Column("comment", String)
                     )
 
+entities = Table("entities", metadata,
+                 Column("id", Integer, primary_key=True),
+                 Column("type", String),
+                 Column("is_eligible", Boolean)
+                 )
+
 in_pogo = Table("in_pogo", metadata,
                 Column("id", Integer, primary_key=True),
                 Column("latitude", Float),

@@ -19,13 +19,13 @@ class Entity
 		this.longitude = obj.longitude;
 		this.image = obj.image;
 
-		this.type = (obj.type === undefined) ? "none" : obj.type;
-		this.isEligible = (obj.isEligible === undefined) ? false : Boolean(obj.isEligible);
+		this.type = (obj.type === undefined) ? "portal" : obj.type;
+		this.is_eligible = (obj.is_eligible === undefined) ? false : Boolean(obj.is_eligible);
 		
 		switch(this.type) {
 			case "portal": this.icon = Entity.icons.portal; break;
 			case "pokestop": this.icon = Entity.icons.pokestop; break;
-			case "gym":	this.icon = (this.isEligible) ? Entity.icons.gymEligible : Entity.icons.gym; break;
+			case "gym":	this.icon = (this.is_eligible) ? Entity.icons.gymEligible : Entity.icons.gym; break;
 			case "unverified": this.icon = Entity.icons.unverified; break;
 		}
 
@@ -55,7 +55,7 @@ class Entity
 				case "unverified": Entity.env.editorButtons.type.unverified.classList.add("selected"); break;
 				case "portal": Entity.env.editorButtons.type.notInPogo.classList.add("selected"); break;
 			}
-			switch(this.isEligible) {
+			switch(this.is_eligible) {
 				case true: Entity.env.editorButtons.eligible.eligible.classList.add("selected"); break;
 				case false: Entity.env.editorButtons.eligible.notEligible.classList.add("selected"); break;
 			}
@@ -353,7 +353,7 @@ class Enviroment
 		this.editorButtons.type.pokestop.addEventListener("click", ()=>{this.update({type:"pokestop"});});
 		this.editorButtons.type.gym.addEventListener("click", ()=>{this.update({type:"gym"});});
 		this.editorButtons.type.unverified.addEventListener("click", ()=>{this.update({type:"unverified"});});
-		this.editorButtons.type.notInPogo.addEventListener("click", ()=>{this.update({type:"none"});});
+		this.editorButtons.type.notInPogo.addEventListener("click", ()=>{this.update({type:"portal"});});
 
 		this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(this.editorButtons.type.container);
 
@@ -368,34 +368,40 @@ class Enviroment
 		this.editorButtons.eligible.container.classList.add("buttonsContainer");
 		this.editorButtons.eligible.container.classList.add("buttonsContainerSelectable");
 		this.editorButtons.eligible.container.id = "eligibleButtons";
-		this.editorButtons.eligible.eligible.addEventListener("click", ()=>{this.update({isEligible:true});});
-		this.editorButtons.eligible.notEligible.addEventListener("click", ()=>{this.update({isEligible:false});});
+		this.editorButtons.eligible.eligible.addEventListener("click", ()=>{this.update({is_eligible:true});});
+		this.editorButtons.eligible.notEligible.addEventListener("click", ()=>{this.update({is_eligible:false});});
 
 		this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(this.editorButtons.eligible.container);
 	}
 	update(obj)
 	{
-		if(obj.type === undefined && obj.isEligible === undefined) {console.error("Error");return;}
+		if(obj.type === undefined && obj.is_eligible === undefined) {console.error("Error");return;}
 		if(obj.type !== undefined && obj.type === this.currentEntity.type) return;
-		if(obj.isEligible !== undefined && obj.isEligible === this.currentEntity.isEligible) return;
+		if(obj.is_eligible !== undefined && obj.is_eligible === this.currentEntity.is_eligible) return;
 
-		$.getJSON("/set_entities/", {
-			key: key,
-			id: this.currentEntity.id,
-			type: ((obj.type !== undefined) ? obj.type : this.currentEntity.type),
-			isEligible: + ((obj.isEligible !== undefined) ? obj.isEligible : this.currentEntity.isEligible)
-		}, 
-		(data) => {
-			if(data.done == true) {
-				if(data.entity.type === undefined) data.entity = new Unverified(data.entity);
-				else data.entity = new Entity(data.entity);
-				
-				this.currentEntity.hide();
-				this.entities.filter((entity) => { return this.currentEntity.id === data.entity.id });
+		$.ajax({
+			type: "POST",
+			url: "/set_entities/",
+			data: JSON.stringify({
+				key: key,
+				id: this.currentEntity.id,
+				type: ((obj.type !== undefined) ? obj.type : this.currentEntity.type),
+				is_eligible: ((obj.is_eligible !== undefined) ? obj.is_eligible : this.currentEntity.is_eligible)
+			}), 
+			success: (data) => {
+				if(data.done == true) {
+					if(data.entity.type === undefined) data.entity = new Unverified(data.entity);
+					else data.entity = new Entity(data.entity);
+					
+					this.currentEntity.hide();
+					this.entities.filter((entity) => { return this.currentEntity.id === data.entity.id });
 
-				this.entities.push(data.entity);
-				data.entity.updateInfobox();
-			} else console.error("Error");
+					this.entities.push(data.entity);
+					data.entity.updateInfobox();
+				} else console.error("Error");
+			},
+			contentType: "application/json",
+			dataType: "json"
 		});
 	}
 

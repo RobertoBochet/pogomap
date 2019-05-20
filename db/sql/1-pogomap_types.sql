@@ -1,1 +1,1 @@
-CREATE TYPE entities_type AS ENUM ('none', 'pokestop', 'gym');
+CREATE TYPE entities_type AS ENUM ('portal', 'pokestop', 'gym');

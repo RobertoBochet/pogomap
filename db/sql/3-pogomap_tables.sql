@@ -5,7 +5,7 @@ CREATE TABLE "editorkeys" (
 
 CREATE TABLE "entities" (
   "id" integer NOT NULL PRIMARY KEY,
-  "type" entities_type NOT NULL DEFAULT 'none',
+  "type" entities_type NOT NULL DEFAULT 'portal',
   "is_eligible" boolean NOT NULL DEFAULT FALSE
 );
 

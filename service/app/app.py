@@ -27,13 +27,23 @@ def get_entities(entity_type=None):
 
 @app.route("/set_entities/", methods=["POST"])
 def set_entities():
-    if "key" not in flask.request.form:
+    if "key" not in flask.request.json:
         return ResponseJSON(error="Must be provided an authentication key")
 
-    if not pogomap.is_editor_key_valid(flask.request.form["key"]):
-        return ResponseJSON(error="Invalid authentication key").to_json()
+    if not pogomap.is_editor_key_valid(flask.request.json["key"]):
+        return ResponseJSON(error="Invalid authentication key")
 
-    return "ciao"
+    if "id" not in flask.request.json or "type" not in flask.request.json or "is_eligible" not in flask.request.json:
+        return ResponseJSON(error="Must be provided id, type and is_eligible")
+
+    try:
+        new_entity = pogomap.set_entity(id=flask.request.json["id"], type=flask.request.json["type"],
+                                        is_eligible=flask.request.json["is_eligible"])
+
+        return ResponseJSON(payload=new_entity, payload_name="entity")
+    except Exception as e:
+        logging.info("Exception {}".format(type(e).__name__))
+        return ResponseJSON(exception=e)
 
 
 @app.route("/<regex('[0-9a-zA-Z]{32}'):key>/")

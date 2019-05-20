@@ -40,7 +40,7 @@ FROM
     "entities"
     JOIN "portals" ON "entities"."id" = "portals"."id"
 WHERE
-    "entities"."type" <> 'none';
+    "entities"."type" <> 'portal';
 
 CREATE VIEW "not_in_pogo" AS
 SELECT
@@ -55,7 +55,7 @@ FROM
     "entities"
     JOIN "portals" ON "entities"."id" = "portals"."id"
 WHERE
-    "entities"."type" = 'none';
+    "entities"."type" = 'portal';
 
 CREATE VIEW "pokestops" AS
 SELECT
