@@ -78,7 +78,7 @@ class PogoMap:
 
                 session.execute(tables.entities.insert().values(id=id, type=type, is_eligible=is_eligible))
 
-                logging.info("Entity {} now is in game".format(id))
+                logging.info("Entity {} now is verified".format(id))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
@@ -87,7 +87,7 @@ class PogoMap:
 
                 session.execute(tables.entities.delete().where(tables.entities.c.id == id))
 
-                logging.info("Entity {} now is not in game".format(id))
+                logging.info("Entity {} now is unverified".format(id))
 
                 return GET_ENTITIES["unverified"][1](**session.execute(
                     GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == id)).fetchone())
