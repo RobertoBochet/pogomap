@@ -25,11 +25,11 @@ class ResponseJSON(flask.Response):
             obj["error"] = type(self.exception).__name__
         else:
             obj["done"] = True
+            if self.payload is not None:
+                if inspect.isgenerator(self.payload):
+                    self.payload = list(self.payload)
 
-            if inspect.isgenerator(self.payload):
-                self.payload = list(self.payload)
-
-            obj[self.payload_name] = self.payload
+                obj[self.payload_name] = self.payload
 
         return obj
 

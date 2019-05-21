@@ -64,7 +64,7 @@ class PogoMap:
                 tables.editor_keys.c.key == key)).scalar() == 1 else False
 
     def set_entity(self, id, type, is_eligible):
-        logging.debug("Set entity {}".format(id))
+        logging.info("Try to set entity {}".format(id))
 
         session = self.Session()
         with session.begin():
@@ -78,12 +78,16 @@ class PogoMap:
 
                 session.execute(tables.entities.insert().values(id=id, type=type, is_eligible=is_eligible))
 
+                logging.info("Entity {} now is in game".format(id))
+
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
 
             elif there_is and type == "unverified":
 
                 session.execute(tables.entities.delete().where(tables.entities.c.id == id))
+
+                logging.info("Entity {} now is not in game".format(id))
 
                 return GET_ENTITIES["unverified"][1](**session.execute(
                     GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == id)).fetchone())
@@ -95,5 +99,40 @@ class PogoMap:
                 session.execute(tables.entities.update().where(tables.entities.c.id == id) \
                                 .values(id=id, type=type, is_eligible=is_eligible))
 
+                logging.info(
+                    "Entity {} now is a {} {}".format(id, type, "eligible" if is_eligible else "not eligible"))
+
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
+
+    def add_entities(self, *args, **kwargs):
+        logging.info("Try to add entities")
+
+        entities = []
+        for a in args:
+            if isinstance(a, (list,)):
+                entities += a
+            elif isinstance(a, (dict,)):
+                entities.append(a)
+            else:
+                raise Exception()
+
+        if len(kwargs) is not 0:
+            entities += [{kwargs}]
+
+        logging.info("{} possible new portals".format(len(entities)))
+
+        session = self.Session()
+        with session.begin():
+            new_entities = []
+            for e in entities:
+                if session.execute(select([func.count()]).where(tables.portals.c.guid == e["guid"])).scalar() == 0:
+                    new_entities.append(e)
+                    logging.info("Discovered new portal {}".format(e["name"]))
+
+            if len(new_entities) != 0:
+                session.execute(tables.portals.insert(), new_entities)
+                logging.info("Added {} new entities".format(len(new_entities)))
+
+            else:
+                logging.info("No new entities")
