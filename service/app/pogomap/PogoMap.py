@@ -127,11 +127,10 @@ class PogoMap:
             new_entities = []
             for e in entities:
                 # Check if the portal is already in the db yet
-                if session.execute(select()
+                if session.execute(select([func.count()])
                                            .where(tables.portals.c.name == e["name"])
                                            .where(tables.portals.c.latitude == e["latitude"])
-                                           .where(tables.portals.c.longitude == e["longitude"])
-                                   ):
+                                           .where(tables.portals.c.longitude == e["longitude"])) != 0:
                     continue
 
                 # Search similar entities in the db
