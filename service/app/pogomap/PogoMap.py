@@ -126,10 +126,42 @@ class PogoMap:
         with session.begin():
             new_entities = []
             for e in entities:
-                if session.execute(select([func.count()]).where(tables.portals.c.guid == e["guid"])).scalar() == 0:
+                # Check if the portal is already in the db yet
+                if session.execute(select()
+                                           .where(tables.portals.c.name == e["name"])
+                                           .where(tables.portals.c.latitude == e["latitude"])
+                                           .where(tables.portals.c.longitude == e["longitude"])
+                                   ):
+                    continue
+
+                # Search similar entities in the db
+                r = session.execute(select().where(
+                    or_(
+                        tables.portals.c.name == e["name"],
+                        and_(
+                            tables.portals.c.latitude == e["latitude"],
+                            tables.portals.c.longitude == e["longitude"]
+                        )
+                    )
+                )).fetchall()
+
+                # If there is not a similar entity, prepare for addition
+                if r.len() == 0:
                     new_entities.append(e)
                     logging.info("Discovered new portal {}".format(e["name"]))
 
+                # If there is a only one similar entity, update it
+                elif r.len() == 1:
+                    session.execute(tables.portals.update().where(tables.portals.c.id == r["id"]) \
+                                    .values(name=e["name"], latitude=["latitude"], longitude=["longitude"]))
+                    logging.info("Entity {} updated".format(e["name"]))
+
+
+                # Check if there is a conflict in update
+                elif r.len() > 1:
+                    logging.warning("Found a conflict in the db")
+
+            # Add the discovered entities to the db
             if len(new_entities) != 0:
                 session.execute(tables.portals.insert(), new_entities)
                 logging.info("Added {} new entities".format(len(new_entities)))
