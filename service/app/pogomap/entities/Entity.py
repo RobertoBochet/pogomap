@@ -8,6 +8,5 @@ class Entity:
     latitude: float
     longitude: float
     image: str
-    guid: str
     type: str
     is_eligible: bool = False

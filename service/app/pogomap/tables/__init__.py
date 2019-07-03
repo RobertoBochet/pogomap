@@ -19,7 +19,6 @@ in_pogo = Table("in_pogo", metadata,
                 Column("longitude", Float),
                 Column("name", String),
                 Column("image", String),
-                Column("guid", String),
                 Column("type", String),
                 Column("is_eligible", Boolean)
                 )
@@ -30,7 +29,6 @@ not_in_pogo = Table("not_in_pogo", metadata,
                     Column("longitude", Float),
                     Column("name", String),
                     Column("image", String),
-                    Column("guid", String),
                     Column("is_eligible", Boolean)
                     )
 
@@ -39,8 +37,7 @@ unverified = Table("unverified", metadata,
                    Column("latitude", Float),
                    Column("longitude", Float),
                    Column("name", String),
-                   Column("image", String),
-                   Column("guid", String)
+                   Column("image", String)
                    )
 
 verified = Table("verified", metadata,
@@ -49,7 +46,6 @@ verified = Table("verified", metadata,
                  Column("longitude", Float),
                  Column("name", String),
                  Column("image", String),
-                 Column("guid", String),
                  Column("type", String),
                  Column("is_eligible", Boolean)
                  )
@@ -59,8 +55,7 @@ portals = Table("portals", metadata,
                 Column("latitude", Float),
                 Column("longitude", Float),
                 Column("name", String),
-                Column("image", String),
-                Column("guid", String)
+                Column("image", String)
                 )
 
 pokestops = Table("pokestops", metadata,
@@ -69,7 +64,6 @@ pokestops = Table("pokestops", metadata,
                   Column("longitude", Float),
                   Column("name", String),
                   Column("image", String),
-                  Column("guid", String),
                   Column("is_eligible", Boolean)
                   )
 
@@ -78,8 +72,7 @@ pokestops_eligible = Table("pokestops_eligible", metadata,
                            Column("latitude", Float),
                            Column("longitude", Float),
                            Column("name", String),
-                           Column("image", String),
-                           Column("guid", String)
+                           Column("image", String)
                            )
 
 gyms = Table("gyms", metadata,
@@ -88,7 +81,6 @@ gyms = Table("gyms", metadata,
              Column("longitude", Float),
              Column("name", String),
              Column("image", String),
-             Column("guid", String),
              Column("is_eligible", Boolean)
              )
 
@@ -97,6 +89,5 @@ gyms_eligible = Table("gyms_eligible", metadata,
                       Column("latitude", Float),
                       Column("longitude", Float),
                       Column("name", String),
-                      Column("image", String),
-                      Column("guid", String)
+                      Column("image", String)
                       )
