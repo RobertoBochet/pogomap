@@ -130,7 +130,7 @@ class PogoMap:
                 if session.execute(select([func.count()])
                                            .where(tables.portals.c.name == e["name"])
                                            .where(tables.portals.c.latitude == e["latitude"])
-                                           .where(tables.portals.c.longitude == e["longitude"])) != 0:
+                                           .where(tables.portals.c.longitude == e["longitude"])).scalar()  != 0:
                     continue
 
                 # Search similar entities in the db
@@ -145,19 +145,19 @@ class PogoMap:
                 )).fetchall()
 
                 # If there is not a similar entity, prepare for addition
-                if r.len() == 0:
+                if len(r) == 0:
                     new_entities.append(e)
                     logging.info("Discovered new portal {}".format(e["name"]))
 
                 # If there is a only one similar entity, update it
-                elif r.len() == 1:
+                elif len(r) == 1:
                     session.execute(tables.portals.update().where(tables.portals.c.id == r["id"]) \
                                     .values(name=e["name"], latitude=["latitude"], longitude=["longitude"]))
                     logging.info("Entity {} updated".format(e["name"]))
 
 
                 # Check if there is a conflict in update
-                elif r.len() > 1:
+                elif len(r) > 1:
                     logging.warning("Found a conflict in the db")
 
             # Add the discovered entities to the db
