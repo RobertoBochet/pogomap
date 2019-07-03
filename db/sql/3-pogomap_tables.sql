@@ -14,8 +14,7 @@ CREATE TABLE "portals" (
   "latitude" double precision NOT NULL,
   "longitude" double precision NOT NULL,
   "name" text NOT NULL,
-  "image" text NOT NULL,
-  "guid" text NOT NULL
+  "image" text NOT NULL
 );
 
 CREATE TABLE "s2cells" (

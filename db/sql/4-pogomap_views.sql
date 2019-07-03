@@ -5,7 +5,6 @@ SELECT
     "portals"."longitude" AS "longitude",
     "portals"."name" AS "name",
     "portals"."image" AS "image",
-    "portals"."guid" AS "guid",
     "entities"."is_eligible" AS "is_eligible"
 FROM
     "entities"
@@ -19,8 +18,7 @@ SELECT
     "gyms"."latitude" AS "latitude",
     "gyms"."longitude" AS "longitude",
     "gyms"."name" AS "name",
-    "gyms"."image" AS "image",
-    "gyms"."guid" AS "guid"
+    "gyms"."image" AS "image"
 FROM
     "gyms"
 WHERE
@@ -33,7 +31,6 @@ SELECT
     "portals"."longitude" AS "longitude",
     "portals"."name" AS "name",
     "portals"."image" AS "image",
-    "portals"."guid" AS "guid",
     "entities"."type" AS "type",
     "entities"."is_eligible" AS "is_eligible"
 FROM
@@ -49,7 +46,6 @@ SELECT
     "portals"."longitude" AS "longitude",
     "portals"."name" AS "name",
     "portals"."image" AS "image",
-    "portals"."guid" AS "guid",
     "entities"."is_eligible" AS "is_eligible"
 FROM
     "entities"
@@ -64,7 +60,6 @@ SELECT
     "portals"."longitude" AS "longitude",
     "portals"."name" AS "name",
     "portals"."image" AS "image",
-    "portals"."guid" AS "guid",
     "entities"."is_eligible" AS "is_eligible"
 FROM
     "entities"
@@ -78,8 +73,7 @@ SELECT
     "pokestops"."latitude" AS "latitude",
     "pokestops"."longitude" AS "longitude",
     "pokestops"."name" AS "name",
-    "pokestops"."image" AS "image",
-    "pokestops"."guid" AS "guid"
+    "pokestops"."image" AS "image"
 FROM
     "pokestops"
 WHERE
@@ -91,8 +85,7 @@ SELECT
     "portals"."latitude" AS "latitude",
     "portals"."longitude" AS "longitude",
     "portals"."name" AS "name",
-    "portals"."image" AS "image",
-    "portals"."guid" AS "guid"
+    "portals"."image" AS "image"
 FROM
     "portals"
     LEFT JOIN "entities" ON "entities"."id" = "portals"."id"
@@ -106,7 +99,6 @@ SELECT
     "portals"."longitude" AS "longitude",
     "portals"."name" AS "name",
     "portals"."image" AS "image",
-    "portals"."guid" AS "guid",
     "entities"."type" AS "type",
     "entities"."is_eligible" AS "is_eligible"
 FROM
