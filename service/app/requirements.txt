@@ -1,6 +1,0 @@
-flask
-flask-reggie
-psycopg2
-simplejson
-sqlalchemy
-gunicorn
