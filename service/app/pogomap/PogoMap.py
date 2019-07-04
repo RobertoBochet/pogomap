@@ -1,6 +1,7 @@
 import logging
 import time
 
+import geopy.distance
 from sqlalchemy import *
 from sqlalchemy.orm.session import sessionmaker
 
@@ -130,34 +131,62 @@ class PogoMap:
                 if session.execute(select([func.count()])
                                            .where(tables.portals.c.name == e["name"])
                                            .where(tables.portals.c.latitude == e["latitude"])
-                                           .where(tables.portals.c.longitude == e["longitude"])).scalar()  != 0:
+                                           .where(tables.portals.c.longitude == e["longitude"])).scalar() != 0:
                     continue
 
+                similar_id = []
+
                 # Search similar entities in the db
-                r = session.execute(select().where(
-                    or_(
-                        tables.portals.c.name == e["name"],
-                        and_(
-                            tables.portals.c.latitude == e["latitude"],
-                            tables.portals.c.longitude == e["longitude"]
-                        )
-                    )
-                )).fetchall()
+                for r in session.execute(tables.portals.select().where(
+                        or_(
+                            tables.portals.c.name == e["name"],
+                            and_(
+                                tables.portals.c.latitude == e["latitude"],
+                                tables.portals.c.longitude == e["longitude"]
+                            ),
+                            tables.portals.c.image == "//" + e["image"].split("//")[1]
+                        ))
+                ).fetchall():
+                    # Manages different position
+                    # Updates if the name and the image are the same or the name is the same and positions are close
+                    if r["latitude"] != e["latitude"] or r["longitude"] != e["longitude"]:
+                        if r["name"] == e["name"]:
+                            if r["image"] == "//" + e["image"].split("//")[1] or geopy.distance.vincenty(
+                                    (r["latitude"], r["longitude"]),
+                                    (e["latitude"], e["longitude"])
+                            ).km < 0.2:
+                                similar_id.append(r["id"])
+
+                    # Manages different name
+                    # Updates if position or image are the same
+                    elif r["name"] != e["name"]:
+                        if r["image"] == "//" + e["image"].split("//")[1] or (
+                                r["latitude"] == e["latitude"] and r["longitude"] == e["longitude"]):
+                            similar_id.append(r["id"])
+
+                    # Manages different image
+                    # Updates if position and name are the same
+                    elif r["image"] != "//" + e["image"].split("//")[1]:
+                        if r["name"] == e["name"] and (
+                                r["latitude"] == e["latitude"] and r["longitude"] == e["longitude"]):
+                            similar_id.append(r["id"])
+
+                # If there is a only one similar entity, updates it
+                if len(similar_id) == 1:
+                    session.execute(tables.portals.update().where(tables.portals.c.id == similar_id[0])
+                                    .values(name=e["name"],
+                                            latitude=e["latitude"],
+                                            longitude=e["longitude"],
+                                            image=e["image"]))
+                    logging.info("Entity {} updated".format(e["name"]))
 
                 # If there is not a similar entity, prepare for addition
-                if len(r) == 0:
+                elif len(similar_id) == 0:
                     new_entities.append(e)
                     logging.info("Discovered new portal {}".format(e["name"]))
 
-                # If there is a only one similar entity, update it
-                elif len(r) == 1:
-                    session.execute(tables.portals.update().where(tables.portals.c.id == r["id"]) \
-                                    .values(name=e["name"], latitude=["latitude"], longitude=["longitude"]))
-                    logging.info("Entity {} updated".format(e["name"]))
-
-
-                # Check if there is a conflict in update
-                elif len(r) > 1:
+                # Log conflict
+                else:
                     logging.warning("Found a conflict in the db")
 
             # Add the discovered entities to the db
