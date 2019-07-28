@@ -25,31 +25,34 @@ GET_ENTITIES = {
 class PogoMap:
     def __init__(self, pg_host: str = "127.0.0.1", pg_user: str = "postgres", pg_pass: str = "",
                  pg_db_name: str = "pogomap"):
+        # Retrieves a logger
+        self.logger = logging.getLogger(__name__)
+
         self.db = create_engine("postgresql://{}:{}@{}/{}".format(pg_user, pg_pass, pg_host, pg_db_name))
         self.Session = sessionmaker(bind=self.db, autocommit=True)
         self.wait_db()
 
     def wait_db(self):
-        logging.info("Try to connect to db")
+        self.logger.info("Try to connect to db")
         while True:
             try:
                 with self.db.connect() as connection:
 
                     result = connection.execute('SELECT version()')
 
-                    logging.debug("db version: " + result.fetchone()[0])
+                    self.logger.debug("db version: " + result.fetchone()[0])
 
-                logging.info("Connected to db")
+                self.logger.info("Connected to db")
                 return
 
             except (Exception):
-                logging.info("Failed to connect to db. Will retry early...")
+                self.logger.info("Failed to connect to db. Will retry early...")
                 time.sleep(1)
 
-        logging.error("Failed to connect to db")
+        self.logger.error("Failed to connect to db")
 
     def get_entities(self, type):
-        logging.debug("Get entities {}".format(type))
+        self.logger.debug("Get entities {}".format(type))
 
         if not type in GET_ENTITIES:
             raise InvalidEntity()
@@ -66,7 +69,7 @@ class PogoMap:
                 tables.editor_keys.c.key == key)).scalar() == 1 else False
 
     def set_entity(self, id, type, is_eligible):
-        logging.info("Try to set entity {}".format(id))
+        self.logger.info("Try to set entity {}".format(id))
 
         session = self.Session()
         with session.begin():
@@ -80,7 +83,7 @@ class PogoMap:
 
                 session.execute(tables.entities.insert().values(id=id, type=type, is_eligible=is_eligible))
 
-                logging.info("Entity {} now is verified".format(id))
+                self.logger.info("Entity {} now is verified".format(id))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
@@ -89,7 +92,7 @@ class PogoMap:
 
                 session.execute(tables.entities.delete().where(tables.entities.c.id == id))
 
-                logging.info("Entity {} now is unverified".format(id))
+                self.logger.info("Entity {} now is unverified".format(id))
 
                 return GET_ENTITIES["unverified"][1](**session.execute(
                     GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == id)).fetchone())
@@ -101,14 +104,14 @@ class PogoMap:
                 session.execute(tables.entities.update().where(tables.entities.c.id == id) \
                                 .values(id=id, type=type, is_eligible=is_eligible))
 
-                logging.info(
+                self.logger.info(
                     "Entity {} now is a {} {}".format(id, type, "eligible" if is_eligible else "not eligible"))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
 
     def add_entities(self, *args, **kwargs):
-        logging.info("Try to add entities")
+        self.logger.info("Try to add entities")
 
         entities = []
         for a in args:
@@ -122,7 +125,7 @@ class PogoMap:
         if len(kwargs) is not 0:
             entities += [{kwargs}]
 
-        logging.info("{} possible new portals".format(len(entities)))
+        self.logger.info("{} possible new portals".format(len(entities)))
 
         session = self.Session()
         with session.begin():
@@ -179,21 +182,21 @@ class PogoMap:
                                             latitude=e["latitude"],
                                             longitude=e["longitude"],
                                             image=e["image"]))
-                    logging.info("Entity {} updated".format(e["name"]))
+                    self.logger.info("Entity {} updated".format(e["name"]))
 
                 # If there is not a similar entity, prepare for addition
                 elif len(similar_id) == 0:
                     new_entities.append(e)
-                    logging.info("Discovered new portal {}".format(e["name"]))
+                    self.logger.info("Discovered new portal {}".format(e["name"]))
 
                 # Log conflict
                 else:
-                    logging.warning("Found a conflict in the db")
+                    self.logger.warning("Found a conflict in the db")
 
             # Add the discovered entities to the db
             if len(new_entities) != 0:
                 session.execute(tables.portals.insert(), new_entities)
-                logging.info("Added {} new entities".format(len(new_entities)))
+                self.logger.info("Added {} new entities".format(len(new_entities)))
 
             else:
-                logging.info("No new entities")
+                self.logger.info("No new entities")
