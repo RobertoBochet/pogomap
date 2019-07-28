@@ -3,3 +3,4 @@
 !/sql/[0-6]-*.sql
 /tools/
 /test/
+/test.env

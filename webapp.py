@@ -1,37 +1,45 @@
 import logging
+from os.path import join, dirname, abspath
+from typing import Union
 
 import flask
 import flask_reggie
+from flask import Flask
 
+import log
 from ResponseJSON import ResponseJSON
 from pogomap import PogoMap
 from pogomap.exceptions import InvalidEntity
 
 
-class WebApp:
-    def __init__(self, flask_port: int = 5775, **kwargs):
+class WebApp(Flask):
+    def __init__(self, flask_port: int = 5775, log_level: Union[int, str] = logging.ERROR, **kwargs):
+        super(WebApp, self).__init__("pogomap",
+                                     template_folder=join(dirname(abspath(__file__)), 'templates'),
+                                     static_folder=join(dirname(abspath(__file__)), 'static'))
+
+        # Init log
+        log.intial_setup()
+        log.setup_log_levels(log_level)
+
         # Retrieves logger
         self.logger = logging.getLogger(__name__)
 
         # Init map
         self.pogomap = PogoMap(**kwargs)
 
-        # Init Flask
-        self.flask = flask.Flask(__name__)
-
         # Init Flask regex
-        flask_reggie.Reggie(self.flask)
+        flask_reggie.Reggie(self)
 
         # Set url rules
-        self.flask.add_url_rule("/get_entities/<string:entity_type>/", "get_entities", view_func=self.get_entities)
-        self.flask.add_url_rule("/set_entities/", "set_entities", methods=["POST"], view_func=self.set_entities)
-        self.flask.add_url_rule("/add_entities/", "add_entities", methods=["POST"], view_func=self.add_entities)
-        self.flask.add_url_rule("/<regex('[0-9a-zA-Z]{32}'):key>/", "map_key", view_func=self.map_key)
-        self.flask.add_url_rule("/", "map", view_func=self.map)
-        self.flask.add_url_rule("/favicon.ico", "favicon", view_func=self.favicon)
+        self.add_url_rule("/get_entities/<string:entity_type>/", "get_entities", view_func=self.get_entities)
+        self.add_url_rule("/set_entities/", "set_entities", methods=["POST"], view_func=self.set_entities)
+        self.add_url_rule("/add_entities/", "add_entities", methods=["POST"], view_func=self.add_entities)
+        self.add_url_rule("/<regex('[0-9a-zA-Z]{32}'):key>/", "map_key", view_func=self.map_key)
+        self.add_url_rule("/", "map", view_func=self.map)
+        self.add_url_rule("/favicon.ico", "favicon", view_func=self.favicon)
 
-        # Start flask
-        self.flask.run(port=flask_port)
+        self.logger.info("The web app is ready")
 
     def get_entities(self, entity_type: str = None):
         try:

@@ -6,9 +6,6 @@ import log
 from webapp import WebApp
 
 if __name__ == "__main__":
-    # Set logging format
-    log.intial_setup()
-
     # Get inline arguments
     parser = argparse.ArgumentParser()
 
@@ -31,7 +28,7 @@ if __name__ == "__main__":
     args = {k: args[k] for k in args if args[k] is not None}
 
     # Verbosity level map
-    verbosity_levels = {
+    VERBOSITY_LEVELS = {
         0: logging.ERROR,
         1: logging.WARNING,
         2: logging.INFO,
@@ -40,12 +37,18 @@ if __name__ == "__main__":
 
     # Find verbosity level
     try:
-        verbosity_level = verbosity_levels[args.pop("verbosity_level")]
+        args["verbosity_level"] = VERBOSITY_LEVELS[args.pop("verbosity_level")]
     except KeyError:
-        verbosity_level = verbosity_levels[3]
+        pass
 
-    # Set verbosity level
-    log.setup_log_levels(verbosity_level)
+    # Find flask port
+    try:
+        flask_port = args.pop("flask_port")
+    except KeyError:
+        flask_port = None
 
     # Create the web app
-    bot = WebApp(**args)
+    app = WebApp(**args)
+
+    # Run the web app
+    app.run(port=flask_port)
