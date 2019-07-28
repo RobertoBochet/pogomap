@@ -98,12 +98,12 @@ class WebApp(Flask):
 
     def map_key(self, key: str):
         if self.pogomap.is_editor_key_valid(key):
-            return flask.render_template("index.html", google_apy_key=self.google_api_key, key=key)
+            return flask.render_template("index.html", google_api_key=self.google_api_key, key=key)
         else:
             return "Key is not valid"
 
     def map(self):
-        return flask.render_template("index.html", google_apy_key=self.google_api_key)
+        return flask.render_template("index.html", google_api_key=self.google_api_key)
 
     def favicon(self):
         return flask.redirect("/static/favicon/favicon.ico", code=301)
