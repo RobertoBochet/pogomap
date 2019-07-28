@@ -10,6 +10,7 @@ def gunicorn_entry():
 
     env = {}
 
+    env["google_api_key"] = os.getenv("GOOGLE_API_KEY")
     env["pg_host"] = os.getenv("PG_HOST")
     env["pg_user"] = os.getenv("PG_USER")
     env["pg_pass"] = os.getenv("PG_PASS")

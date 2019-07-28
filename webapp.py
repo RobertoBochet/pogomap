@@ -13,7 +13,8 @@ from pogomap.exceptions import InvalidEntity
 
 
 class WebApp(Flask):
-    def __init__(self, flask_port: int = 5775, log_level: Union[int, str] = logging.ERROR, **kwargs):
+    def __init__(self, google_api_key: str, flask_port: int = 5775, log_level: Union[int, str] = logging.ERROR,
+                 **kwargs):
         super(WebApp, self).__init__("pogomap",
                                      template_folder=join(dirname(abspath(__file__)), 'templates'),
                                      static_folder=join(dirname(abspath(__file__)), 'static'))
@@ -24,6 +25,9 @@ class WebApp(Flask):
 
         # Retrieves logger
         self.logger = logging.getLogger(__name__)
+
+        # Save google api key
+        self.google_api_key = google_api_key
 
         # Init map
         self.pogomap = PogoMap(**kwargs)
@@ -94,12 +98,12 @@ class WebApp(Flask):
 
     def map_key(self, key: str):
         if self.pogomap.is_editor_key_valid(key):
-            return flask.render_template("index.html", key=key)
+            return flask.render_template("index.html", google_apy_key=self.google_api_key, key=key)
         else:
             return "Key is not valid"
 
     def map(self):
-        return flask.render_template("index.html")
+        return flask.render_template("index.html", google_apy_key=self.google_api_key)
 
     def favicon(self):
         return flask.redirect("/static/favicon/favicon.ico", code=301)

@@ -9,6 +9,7 @@ if __name__ == "__main__":
     # Get inline arguments
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("-k", "--google-api-key", dest="google_api_key", help="the google api key")
     parser.add_argument("-d", "--pg-host", dest="pg_host", help="postgres host")
     parser.add_argument("-u", "--pg-user", dest="pg_user", help="postgres user")
     parser.add_argument("-p", "--pg-pass", dest="pg_pass", help="postgres password")
