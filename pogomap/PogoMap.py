@@ -23,8 +23,9 @@ GET_ENTITIES = {
 
 
 class PogoMap:
-    def __init__(self, db_host, db_user, db_pass, db_name):
-        self.db = create_engine("postgresql://{}:{}@{}/{}".format(db_user, db_pass, db_host, db_name))
+    def __init__(self, pg_host: str = "127.0.0.1", pg_user: str = "postgres", pg_pass: str = "",
+                 pg_db_name: str = "pogomap"):
+        self.db = create_engine("postgresql://{}:{}@{}/{}".format(pg_user, pg_pass, pg_host, pg_db_name))
         self.Session = sessionmaker(bind=self.db, autocommit=True)
         self.wait_db()
 
