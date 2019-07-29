@@ -8,8 +8,8 @@ export class ButtonsSet {
         this.container.id = id;
 
         classes.forEach((v) => {
-            this.container.classList.add(v)
-        })
+            this.container.classList.add(v);
+        });
     }
 
     addButton(id) {

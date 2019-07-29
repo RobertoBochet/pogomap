@@ -2,22 +2,25 @@
 
 
 export class DataLayer {
-    constructor() {
+    constructor(map, data=[]) {
         this.isHide = true;
-        this.data = [];
+        this.data = data;
+        this.map = map;
     }
 
     show() {
-        for (let i in this.data) {
-            if (this.data[i].getMap() === undefined) this.data[i].setMap(DataLayer.env.map);
-        }
+        this.data.forEach((v) => {
+            if (typeof v.getMap() === "undefined") v.setMap(this.map);
+        });
+
         this.isHide = false;
     }
 
     hide() {
-        for (let i in this.data) {
-            if (this.data[i].getMap() !== undefined) this.data[i].setMap(undefined);
-        }
+        this.data.forEach((v) => {
+            if (typeof v.getMap() !== "undefined") v.setMap(undefined);
+        });
+
         this.isHide = true;
     }
 }

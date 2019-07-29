@@ -12,7 +12,6 @@ export class Enviroment {
         this.currentEntity = null;
 
         Entity.env = this;
-        DataLayer.env = this;
 
         this.makeMap();
         this.makeIcons();
@@ -142,10 +141,6 @@ export class Enviroment {
     }
 
     makeGridLayers() {
-        this.layers.s2cells = {};
-        this.layers.s2cells.small = new DataLayer();
-        this.layers.s2cells.big = new DataLayer();
-
         let s17 = new google.maps.Data();
         let s14 = new google.maps.Data();
         let s13 = new google.maps.Data();
@@ -173,12 +168,12 @@ export class Enviroment {
         s14.loadGeoJson("/static/layers/s2cells/14.geojson");
         s13.loadGeoJson("/static/layers/s2cells/13.geojson");
 
-        this.layers.s2cells.small.data = [s14, s17];
-        this.layers.s2cells.big.data = [s13];
+        this.layers.s2cells = {};
+        this.layers.s2cells.small = new DataLayer(this.map, [s13]);
+        this.layers.s2cells.big = new DataLayer(this.map, [s14, s17]);
     }
 
     makeNestsLayer() {
-        this.layers.nests = new DataLayer();
 
         let nests = new google.maps.Data();
 
@@ -192,7 +187,7 @@ export class Enviroment {
 
         nests.loadGeoJson("/static/layers/nests.geojson");
 
-        this.layers.nests.data = [nests];
+        this.layers.nests = new DataLayer(this.map, [nests]);
     }
 
     initEditor() {
@@ -279,7 +274,7 @@ export class Enviroment {
                 is_eligible: ((obj.is_eligible !== undefined) ? obj.is_eligible : this.currentEntity.is_eligible)
             }),
             success: (data) => {
-                if (data.done == true) {
+                if (data.done === true) {
                     if (data.entity.type === undefined) data.entity = new Unverified(data.entity);
                     else data.entity = new Entity(data.entity);
 
@@ -295,6 +290,10 @@ export class Enviroment {
             contentType: "application/json",
             dataType: "json"
         });
+    }
+
+    removeEntities(entity) {
+
     }
 
     fetch() {
