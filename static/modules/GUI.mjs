@@ -1,3 +1,4 @@
+/* global google */
 "use strict";
 
 import {ButtonsSet} from "./ButtonSet.mjs";
