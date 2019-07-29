@@ -69,48 +69,48 @@ class PogoMap:
             return True if session.execute(select([func.count()]).where(
                 tables.editor_keys.c.key == key)).scalar() == 1 else False
 
-    def set_entity(self, id, entity_type, is_eligible):
-        self.logger.info("Try to set entity {}".format(id))
+    def set_entity(self, entity_id, entity_type, is_eligible):
+        self.logger.info("Try to set entity {}".format(entity_id))
 
         session = self.Session()
         with session.begin():
 
             there_is = True if session.execute(
-                select([func.count()]).where(tables.entities.c.id == id)).scalar() == 1 else False
+                select([func.count()]).where(tables.entities.c.id == entity_id)).scalar() == 1 else False
 
             if not there_is:
                 if entity_type not in ["portal", "pokestop", "gym"]:
                     raise InvalidEntity()
 
-                session.execute(tables.entities.insert().values(id=id, type=entity_type, is_eligible=is_eligible))
+                session.execute(tables.entities.insert().values(id=entity_id, type=entity_type, is_eligible=is_eligible))
 
-                self.logger.info("Entity {} now is verified".format(id))
+                self.logger.info("Entity {} now is verified".format(entity_id))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
-                    GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
+                    GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == entity_id)).fetchone())
 
             elif there_is and entity_type == "unverified":
 
-                session.execute(tables.entities.delete().where(tables.entities.c.id == id))
+                session.execute(tables.entities.delete().where(tables.entities.c.id == entity_id))
 
-                self.logger.info("Entity {} now is unverified".format(id))
+                self.logger.info("Entity {} now is unverified".format(entity_id))
 
                 return GET_ENTITIES["unverified"][1](**session.execute(
-                    GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == id)).fetchone())
+                    GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == entity_id)).fetchone())
 
             elif there_is:
                 if entity_type not in ["portal", "pokestop", "gym"]:
                     raise InvalidEntity()
 
                 session.execute(
-                    tables.entities.update().where(tables.entities.c.id == id).values(id=id, type=entity_type,
+                    tables.entities.update().where(tables.entities.c.id == entity_id).values(id=entity_id, type=entity_type,
                                                                                       is_eligible=is_eligible))
 
                 self.logger.info(
-                    "Entity {} now is a {} {}".format(id, entity_type, "eligible" if is_eligible else "not eligible"))
+                    "Entity {} now is a {} {}".format(entity_id, entity_type, "eligible" if is_eligible else "not eligible"))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
-                    GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
+                    GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == entity_id)).fetchone())
 
     def add_entities(self, *args, **kwargs):
         self.logger.info("Try to add entities")

@@ -254,12 +254,12 @@ export class Enviroment {
     }
 
     update(obj) {
-        if (obj.type === undefined && obj.is_eligible === undefined) {
+        if (typeof obj.type === "undefined" && typeof obj.is_eligible === "undefined") {
             console.error("Error");
             return;
         }
-        if (obj.type !== undefined && obj.type === this.currentEntity.type) return;
-        if (obj.is_eligible !== undefined && obj.is_eligible === this.currentEntity.is_eligible) return;
+        if (typeof obj.type !== "undefined" && obj.type === this.currentEntity.type) return;
+        if (typeof obj.is_eligible !== "undefined" && obj.is_eligible === this.currentEntity.isEligible) return;
 
         $.ajax({
             type: "POST",
@@ -267,12 +267,12 @@ export class Enviroment {
             data: JSON.stringify({
                 key: key,
                 id: this.currentEntity.id,
-                type: ((obj.type !== undefined) ? obj.type : this.currentEntity.type),
-                is_eligible: ((obj.is_eligible !== undefined) ? obj.is_eligible : this.currentEntity.is_eligible)
+                type: ((typeof obj.type !== "undefined") ? obj.type : this.currentEntity.type),
+                is_eligible: ((typeof obj.is_eligible !== "undefined") ? obj.is_eligible : this.currentEntity.isEligible)
             }),
             success: (data) => {
                 if (data.done === true) {
-                    if (data.entity.type === undefined) data.entity = new Unverified(data.entity);
+                    if (typeof data.entity.type === "undefined") data.entity = new Unverified(data.entity);
                     else data.entity = new Entity(data.entity);
 
                     this.currentEntity.hide();
@@ -282,7 +282,7 @@ export class Enviroment {
 
                     this.entities.push(data.entity);
                     data.entity.updateInfobox();
-                } else console.error("Error");
+                } else console.error(data.error);
             },
             contentType: "application/json",
             dataType: "json"

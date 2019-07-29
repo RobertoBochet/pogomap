@@ -1,12 +1,14 @@
 "use strict";
 
 export class ButtonsSet {
-    constructor(id, classes = ["buttonsContainer"]) {
+    constructor(id, classes = [], is_selectable = false) {
         this.buttons = [];
+        this.isSelectable = is_selectable;
 
         this.container = document.createElement("div");
         this.container.id = id;
 
+        this.container.classList.add("buttonsContainer");
         classes.forEach((v) => {
             this.container.classList.add(v);
         });
@@ -20,5 +22,12 @@ export class ButtonsSet {
         this.container.append(button);
 
         return button;
+    }
+
+    select(button) {
+        this.buttons.forEach((v) => {
+            if(v.id === button) v.classList.add("selected")
+            else v.classList.remove("selected")
+        })
     }
 }

@@ -10,8 +10,8 @@ export class Entity {
         this.longitude = obj.longitude;
         this.image = obj.image;
 
-        this.type = (obj.type === undefined) ? "portal" : obj.type;
-        this.is_eligible = (obj.is_eligible === undefined) ? false : Boolean(obj.is_eligible);
+        this.type = (typeof obj.type === "undefined") ? "portal" : obj.type;
+        this.isEligible = (typeof obj.is_eligible === "undefined") ? false : Boolean(obj.is_eligible);
 
         switch (this.type) {
             case "portal":
@@ -21,7 +21,7 @@ export class Entity {
                 this.icon = Entity.icons.pokestop;
                 break;
             case "gym":
-                this.icon = (this.is_eligible) ? Entity.icons.gymEligible : Entity.icons.gym;
+                this.icon = (this.isEligible) ? Entity.icons.gymEligible : Entity.icons.gym;
                 break;
             case "unverified":
                 this.icon = Entity.icons.unverified;
@@ -57,24 +57,24 @@ export class Entity {
             });
             switch (this.type) {
                 case "gym":
-                    Entity.env.editorButtons.type.gym.classList.add("selected");
+                    Entity.env.editorButtons.type.select("button-gym");
                     break;
                 case "pokestop":
-                    Entity.env.editorButtons.type.pokestop.classList.add("selected");
+                    Entity.env.editorButtons.type.select("button-pokestop");
                     break;
                 case "unverified":
-                    Entity.env.editorButtons.type.unverified.classList.add("selected");
+                    Entity.env.editorButtons.type.select("button-unverified");
                     break;
                 case "portal":
-                    Entity.env.editorButtons.type.notInPogo.classList.add("selected");
+                    Entity.env.editorButtons.type.select("button-portal");
                     break;
             }
-            switch (this.is_eligible) {
+            switch (this.isEligible) {
                 case true:
-                    Entity.env.editorButtons.eligible.eligible.classList.add("selected");
+                    Entity.env.editorButtons.eligible.select("button-eligible");
                     break;
                 case false:
-                    Entity.env.editorButtons.eligible.notEligible.classList.add("selected");
+                    Entity.env.editorButtons.eligible.select("button-not-eligible");
                     break;
             }
         }
