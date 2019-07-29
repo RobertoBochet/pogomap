@@ -25,8 +25,6 @@ export class Environment {
         // Retrieves the entities
         this.getEntities();
     }
-
-
     setCurrentEntity(entity) {
         this.currentEntity = entity;
 

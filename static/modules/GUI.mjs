@@ -19,17 +19,28 @@ export class GUI {
         if (this.env.key !== null) {
             this.makeEditorButtons();
         }
+
+        this.makePlayer();
     }
 
     makeMap() {
         this.map = new google.maps.Map(this.mapStage, {
-            zoom: 15,
-            center: new google.maps.LatLng(45.309552, 9.504114),
+            zoom: 10,
+            center: {lat: 45.464217, lng: 9.189511},
             mapTypeId: google.maps.MapTypeId.HYBRID,
             zoomControl: false,
             disableDefaultUI: true,
             clickableIcons: false
         });
+
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.map.setCenter({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
+            this.map.setZoom(15);
+        });
+
     }
 
     makeInfoSpaces() {
@@ -210,5 +221,31 @@ export class GUI {
                 this.editorButtons.eligible.deselect();
             }
         }
+    }
+
+    makePlayer() {
+        this.player = new google.maps.Marker({
+            title: "Player",
+            position: new google.maps.LatLng(0, 0),
+            icon: {
+                url: "/static/icons/cursor.svg",
+                size: new google.maps.Size(45, 45),
+                scaledSize: new google.maps.Size(45, 45),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(1 / 2 * 45, 1 / 2 * 45)
+            },
+            clickable: false,
+            zIndex: 10
+        });
+
+        navigator.geolocation.watchPosition((position) => {
+            if (typeof this.player.getMap() === "undefined")
+                this.player.setMap(this.map);
+
+            this.player.setPosition({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
+        });
     }
 }
