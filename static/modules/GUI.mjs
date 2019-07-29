@@ -240,8 +240,7 @@ export class GUI {
         });
 
         navigator.geolocation.watchPosition((position) => {
-            if (typeof this.player.getMap() === "undefined")
-                this.player.setMap(this.map);
+            if (typeof this.player.getMap() === "undefined") this.player.setMap(this.map);
 
             this.player.setPosition({
                 lat: position.coords.latitude,
