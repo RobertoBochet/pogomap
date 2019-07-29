@@ -20,6 +20,11 @@ html, body {
 }
 .GoogleMap .buttonsContainer {
 	cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+.GoogleMap .buttonsContainerHorizontal {
+    flex-direction: row;
 }
 .GoogleMap .buttonsContainer > div {
 	width: 40px;
@@ -30,6 +35,10 @@ html, body {
 	background-size: 18px 18px;
 	background-repeat: no-repeat;
 	background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
 }
 .GoogleMap .buttonsContainer > div:hover {
 	background-color: #f0f0f0;
@@ -57,16 +66,20 @@ html, body {
 }
 
 
-#gridButtons > div:nth-child(1) { background-image: url("/static/icons/grid_big.svg"); }
-#gridButtons > div:nth-child(2) { background-image: url("/static/icons/grid_small.svg"); }
-#nestsButton { background-image: url("/static/icons/grass.svg"); }
+#button-grid-big { background-image: url("/static/icons/grid_big.svg"); }
+#button-grid-small { background-image: url("/static/icons/grid_small.svg"); }
+#button-nests { background-image: url("/static/icons/grass.svg"); }
 
 
-#typeButtons > div:nth-child(1) { background-image: url("/static/icons/gym.svg"); }
-#typeButtons > div:nth-child(2) { background-image: url("/static/icons/pokestop_blue.svg"); }
-#typeButtons > div:nth-child(3) { background-image: url("/static/icons/question_mark.svg"); }
-#typeButtons > div:nth-child(4) { background-image: url("/static/icons/portal_pink.svg"); }
+#button-gym { background-image: url("/static/icons/gym.svg"); }
+#button-pokestop  { background-image: url("/static/icons/pokestop_blue.svg"); }
+#button-unverified { background-image: url("/static/icons/question_mark.svg"); }
+#button-portal { background-image: url("/static/icons/portal_pink.svg"); }
 
 
-#eligibleButtons > div:nth-child(1) { background-image: url("/static/icons/star_gold.svg"); }
-#eligibleButtons > div:nth-child(2) { background-image: url("/static/icons/star_white.svg"); }
+#button-eligible { background-image: url("/static/icons/star_gold.svg"); }
+#button-not-eligible { background-image: url("/static/icons/star_white.svg"); }
+
+
+#button-add::before { content: "➕"; }
+#button-remove::before { content: "❌"; }
