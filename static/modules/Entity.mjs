@@ -1,3 +1,4 @@
+/* global key, google */
 "use strict";
 
 export class Entity {
@@ -36,19 +37,19 @@ export class Entity {
             zIndex: this.icon.zIndex || 1
         });
         this.marker.addListener("click", () => {
-            self.updateInfobox();
+            self.updateInfoBox();
         });
         this.marker.setMap(Entity.env.map);
     }
 
-    updateInfobox() {
+    updateInfoBox() {
         console.log(this);
         Entity.env.currentEntity = this;
 
         Entity.env.infoSpaces.name.innerText = this.name;
         Entity.env.infoSpaces.image.src = this.image;
 
-        if (key != "") {
+        if (typeof key !== "undefined" && key !== "") {
             Entity.env.editorButtons.type.container.childNodes.forEach((o) => {
                 o.classList.remove("selected");
             });
