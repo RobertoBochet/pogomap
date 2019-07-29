@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import List, Union
 
 import geopy.distance
 from sqlalchemy import *
@@ -82,12 +83,14 @@ class PogoMap:
                 if entity_type not in ["portal", "pokestop", "gym"]:
                     raise InvalidEntity()
 
-                session.execute(tables.entities.insert().values(id=entity_id, type=entity_type, is_eligible=is_eligible))
+                session.execute(
+                    tables.entities.insert().values(id=entity_id, type=entity_type, is_eligible=is_eligible))
 
                 self.logger.info("Entity {} now is verified".format(entity_id))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
-                    GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == entity_id)).fetchone())
+                    GET_ENTITIES["verified"][0].select().where(
+                        GET_ENTITIES["verified"][0].c.id == entity_id)).fetchone())
 
             elif there_is and entity_type == "unverified":
 
@@ -96,21 +99,25 @@ class PogoMap:
                 self.logger.info("Entity {} now is unverified".format(entity_id))
 
                 return GET_ENTITIES["unverified"][1](**session.execute(
-                    GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == entity_id)).fetchone())
+                    GET_ENTITIES["unverified"][0].select().where(
+                        GET_ENTITIES["unverified"][0].c.id == entity_id)).fetchone())
 
             elif there_is:
                 if entity_type not in ["portal", "pokestop", "gym"]:
                     raise InvalidEntity()
 
                 session.execute(
-                    tables.entities.update().where(tables.entities.c.id == entity_id).values(id=entity_id, type=entity_type,
-                                                                                      is_eligible=is_eligible))
+                    tables.entities.update().where(tables.entities.c.id == entity_id).values(id=entity_id,
+                                                                                             type=entity_type,
+                                                                                             is_eligible=is_eligible))
 
                 self.logger.info(
-                    "Entity {} now is a {} {}".format(entity_id, entity_type, "eligible" if is_eligible else "not eligible"))
+                    "Entity {} now is a {} {}".format(entity_id, entity_type,
+                                                      "eligible" if is_eligible else "not eligible"))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
-                    GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == entity_id)).fetchone())
+                    GET_ENTITIES["verified"][0].select().where(
+                        GET_ENTITIES["verified"][0].c.id == entity_id)).fetchone())
 
     def add_entities(self, *args, **kwargs):
         self.logger.info("Try to add entities")
@@ -202,3 +209,27 @@ class PogoMap:
 
             else:
                 self.logger.info("No new entities")
+
+    def remove_entities(self, *args: Union[List[int], int]):
+        self.logger.info("Try to remove entities")
+
+        entities = []
+        # Validates the entities provided
+        for a in args:
+            if isinstance(a, list):
+                entities += a
+            elif isinstance(a, int):
+                entities.append(a)
+            else:
+                raise ValueError("The method requires a list of id")
+
+        self.logger.info("{} entities are wanted to delete".format(len(entities)))
+
+        session = self.Session()
+        with session.begin():
+            for e in entities:
+                # Check if the portal is already in the db yet
+                self.logger.debug(str(tables.portals.delete().where(tables.portals.c.id == e)))
+                session.execute(tables.portals.delete().where(tables.portals.c.id == e))
+
+                self.logger.info("Portal {} was deleted".format(e))

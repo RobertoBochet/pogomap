@@ -39,6 +39,7 @@ class WebApp(Flask):
         self.add_url_rule("/get_entities/<string:entity_type>/", "get_entities", view_func=self.get_entities)
         self.add_url_rule("/set_entities/", "set_entities", methods=["POST"], view_func=self.set_entities)
         self.add_url_rule("/add_entities/", "add_entities", methods=["POST"], view_func=self.add_entities)
+        self.add_url_rule("/remove_entities/", "remove_entities", methods=["POST"], view_func=self.remove_entities)
         self.add_url_rule("/<regex('[0-9a-zA-Z]{32}'):key>/", "map_key", view_func=self.map_key)
         self.add_url_rule("/", "map", view_func=self.map)
         self.add_url_rule("/favicon.ico", "favicon", view_func=self.favicon)
@@ -90,6 +91,25 @@ class WebApp(Flask):
 
         try:
             self.pogomap.add_entities(flask.request.json["entities"])
+
+            return ResponseJSON()
+
+        except Exception as e:
+            self.logger.info("Exception {}".format(type(e).__name__))
+            return ResponseJSON(exception=e)
+
+    def remove_entities(self):
+        if "key" not in flask.request.json:
+            return ResponseJSON(error="Must be provided an authentication key")
+
+        if not self.pogomap.is_editor_key_valid(flask.request.json["key"]):
+            return ResponseJSON(error="Invalid authentication key")
+
+        if "entities" not in flask.request.json:
+            return ResponseJSON(error="Must be provided some entities")
+
+        try:
+            self.pogomap.remove_entities(flask.request.json["entities"])
 
             return ResponseJSON()
 

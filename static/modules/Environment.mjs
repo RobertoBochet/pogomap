@@ -250,6 +250,7 @@ export class Environment {
         this.editorButtons.edit.addButton("button-add").addEventListener("click", () => {
         });
         this.editorButtons.edit.addButton("button-remove").addEventListener("click", () => {
+            this.removeEntity();
         });
 
         this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(this.editorButtons.edit.container);
@@ -291,8 +292,29 @@ export class Environment {
         }).then(null);
     }
 
-    removeEntities(entity) {
+    removeEntity() {
+        if(this.currentEntity === null) return;
 
+        if(!confirm(`Are you sure to delete "${this.currentEntity.name}"?`)) return;
+
+        $.ajax({
+            type: "POST",
+            url: "/remove_entities/",
+            data: JSON.stringify({
+                key: this.key,
+                entities: [this.currentEntity.id]
+            }),
+            success: (data) => {
+                if (data.done === true) {
+                    this.currentEntity.hide();
+                    this.entities.filter((entity) => {
+                        return this.currentEntity.id === entity.id;
+                    });
+                } else console.error(data.error);
+            },
+            contentType: "application/json",
+            dataType: "json"
+        }).then(null);
     }
 
     fetch() {
