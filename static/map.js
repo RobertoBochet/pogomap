@@ -1,4 +1,5 @@
 /*jshint esversion: 6 */
+/* global google */
 import {Enviroment} from "./modules/Enviroment.mjs";
 
 let env = null;
