@@ -68,7 +68,8 @@ class WebApp(Flask):
             return ResponseJSON(error="Must be provided id, type and is_eligible")
 
         try:
-            new_entity = self.pogomap.set_entity(entity_id=flask.request.json["id"], entity_type=flask.request.json["type"],
+            new_entity = self.pogomap.set_entity(entity_id=flask.request.json["id"],
+                                                 entity_type=flask.request.json["type"],
                                                  is_eligible=flask.request.json["is_eligible"])
 
             return ResponseJSON(payload=new_entity, payload_name="entity")
@@ -105,5 +106,6 @@ class WebApp(Flask):
     def map(self):
         return flask.render_template("index.html", google_api_key=self.google_api_key)
 
-    def favicon(self):
+    @classmethod
+    def favicon(cls):
         return flask.redirect("/static/favicon/favicon.ico", code=301)
