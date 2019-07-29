@@ -1,3 +1,4 @@
+/* global key, google */
 "use strict";
 
 
@@ -143,19 +144,19 @@ export class Enviroment {
         let s13 = new google.maps.Data();
 
         s17.setStyle({
-            fillColor: 'transparent',
+            fillColor: "transparent",
             strokeColor: "#AAAAAA",
             strokeWeight: 1,
             zIndex: 3
         });
         s14.setStyle({
-            fillColor: 'transparent',
+            fillColor: "transparent",
             strokeColor: "blue",
             strokeWeight: 3,
             zIndex: 5
         });
         s13.setStyle({
-            fillColor: 'transparent',
+            fillColor: "transparent",
             strokeColor: "red",
             strokeWeight: 5,
             zIndex: 10
@@ -234,10 +235,10 @@ export class Enviroment {
         this.editorButtons.eligible = new ButtonsSet("buttons-eligible");
 
         this.editorButtons.eligible.addButton("button-eligible").addEventListener("click", () => {
-            this.update({is_eligible: true});
+            this.update({isEligible: true});
         });
         this.editorButtons.eligible.addButton("button-not-eligible").addEventListener("click", () => {
-            this.update({is_eligible: false});
+            this.update({isEligible: false});
         });
 
         this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(this.editorButtons.eligible.container);
@@ -254,12 +255,12 @@ export class Enviroment {
     }
 
     update(obj) {
-        if (typeof obj.type === "undefined" && typeof obj.is_eligible === "undefined") {
+        if (typeof obj.type === "undefined" && typeof obj.isEligible === "undefined") {
             console.error("Error");
             return;
         }
         if (typeof obj.type !== "undefined" && obj.type === this.currentEntity.type) return;
-        if (typeof obj.is_eligible !== "undefined" && obj.is_eligible === this.currentEntity.isEligible) return;
+        if (typeof obj.isEligible !== "undefined" && obj.isEligible === this.currentEntity.isEligible) return;
 
         $.ajax({
             type: "POST",
@@ -268,7 +269,7 @@ export class Enviroment {
                 key: key,
                 id: this.currentEntity.id,
                 type: ((typeof obj.type !== "undefined") ? obj.type : this.currentEntity.type),
-                is_eligible: ((typeof obj.is_eligible !== "undefined") ? obj.is_eligible : this.currentEntity.isEligible)
+                is_eligible: ((typeof obj.isEligible !== "undefined") ? obj.isEligible : this.currentEntity.isEligible)
             }),
             success: (data) => {
                 if (data.done === true) {
@@ -277,11 +278,11 @@ export class Enviroment {
 
                     this.currentEntity.hide();
                     this.entities.filter((entity) => {
-                        return this.currentEntity.id === data.entity.id
+                        return this.currentEntity.id === data.entity.id;
                     });
 
                     this.entities.push(data.entity);
-                    data.entity.updateInfobox();
+                    data.entity.updateInfoBox();
                 } else console.error(data.error);
             },
             contentType: "application/json",
@@ -296,7 +297,7 @@ export class Enviroment {
     fetch() {
         let self = this;
         $.getJSON("/get_entities/in_pogo/", function (data) {
-            if (data.done == true) {
+            if (data.done === true) {
                 for (let o of data.entities) {
                     self.entities.push(new Entity(o));
                 }
