@@ -1,4 +1,4 @@
-/* global key, google */
+/* global google */
 "use strict";
 
 
@@ -7,7 +7,8 @@ import {DataLayer} from "./DataLayer.mjs";
 import {ButtonsSet} from "./ButtonSet.mjs";
 
 export class Enviroment {
-    constructor() {
+    constructor(key = null) {
+        this.key = typeof key === "string" ? key : null;
         this.mapElement = document.querySelector("#map");
         this.entities = [];
         this.currentEntity = null;
@@ -190,21 +191,21 @@ export class Enviroment {
 
     initEditor() {
         let self = this;
-        if (typeof key != "undefined") {
-            $.getJSON("/get_entities/unverified/", function (data) {
-                if (data.done == true) {
+        if (this.key !== null) {
+            $.getJSON("/get_entities/unverified/", (data) => {
+                if (data.done === true) {
                     for (let o of data.entities) {
                         self.entities.push(new Unverified(o));
                     }
                 } else console.error("Error");
-            });
-            $.getJSON("/get_entities/not_in_pogo/", function (data) {
-                if (data.done == true) {
+            }).then(null);
+            $.getJSON("/get_entities/not_in_pogo/", (data) => {
+                if (data.done === true) {
                     for (let o of data.entities) {
                         self.entities.push(new Entity(o));
                     }
                 } else console.error("Error");
-            });
+            }).then(null);
 
             this.makeEditorButtons();
         }
@@ -266,7 +267,7 @@ export class Enviroment {
             type: "POST",
             url: "/set_entities/",
             data: JSON.stringify({
-                key: key,
+                key: this.key,
                 id: this.currentEntity.id,
                 type: ((typeof obj.type !== "undefined") ? obj.type : this.currentEntity.type),
                 is_eligible: ((typeof obj.isEligible !== "undefined") ? obj.isEligible : this.currentEntity.isEligible)
@@ -287,7 +288,7 @@ export class Enviroment {
             },
             contentType: "application/json",
             dataType: "json"
-        });
+        }).then(null);
     }
 
     removeEntities(entity) {
@@ -296,12 +297,12 @@ export class Enviroment {
 
     fetch() {
         let self = this;
-        $.getJSON("/get_entities/in_pogo/", function (data) {
+        $.getJSON("/get_entities/in_pogo/", (data) => {
             if (data.done === true) {
                 for (let o of data.entities) {
                     self.entities.push(new Entity(o));
                 }
             } else console.error("Error");
-        });
+        }).then(null);
     }
 }

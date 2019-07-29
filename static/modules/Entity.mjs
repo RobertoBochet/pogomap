@@ -1,4 +1,4 @@
-/* global key, google */
+/* global google */
 "use strict";
 
 export class Entity {
@@ -49,7 +49,7 @@ export class Entity {
         Entity.env.infoSpaces.name.innerText = this.name;
         Entity.env.infoSpaces.image.src = this.image;
 
-        if (typeof key !== "undefined" && key !== "") {
+        if (Entity.env.key !== null) {
             Entity.env.editorButtons.type.container.childNodes.forEach((o) => {
                 o.classList.remove("selected");
             });
