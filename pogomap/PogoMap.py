@@ -3,6 +3,7 @@ import time
 
 import geopy.distance
 from sqlalchemy import *
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm.session import sessionmaker
 
 from . import tables
@@ -45,7 +46,7 @@ class PogoMap:
                 self.logger.info("Connected to db")
                 return
 
-            except:
+            except OperationalError:
                 self.logger.info("Failed to connect to db. Will retry early...")
                 time.sleep(1)
 
