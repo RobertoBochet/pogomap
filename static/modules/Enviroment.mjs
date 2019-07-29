@@ -112,12 +112,10 @@ export class Enviroment {
         this.controlButtons.grids = new ButtonsSet("buttons-grids");
 
         this.controlButtons.grids.addButton("button-grid-small").addEventListener("click", () => {
-            if (this.layers.s2cells.small.isHide) this.layers.s2cells.small.show();
-            else this.layers.s2cells.small.hide();
+            this.layers.s2cells.small.toggle();
         });
         this.controlButtons.grids.addButton("button-grid-big").addEventListener("click", () => {
-            if (this.layers.s2cells.big.isHide) this.layers.s2cells.big.show();
-            else this.layers.s2cells.big.hide();
+            this.layers.s2cells.big.toggle();
         });
 
         this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.controlButtons.grids.container);
@@ -127,8 +125,7 @@ export class Enviroment {
         this.controlButtons.nests = new ButtonsSet("buttons-nests");
 
         this.controlButtons.nests.addButton("button-nests").addEventListener("click", () => {
-            if (this.layers.nests.isHide) this.layers.nests.show();
-            else this.layers.nests.hide();
+            this.layers.nests.toggle();
         });
 
         this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.controlButtons.nests.container);

@@ -2,7 +2,7 @@
 
 
 export class DataLayer {
-    constructor(map, data=[]) {
+    constructor(map, data = []) {
         this.isHide = true;
         this.data = data;
         this.map = map;
@@ -10,7 +10,7 @@ export class DataLayer {
 
     show() {
         this.data.forEach((v) => {
-            if (typeof v.getMap() === "undefined") v.setMap(this.map);
+            v.setMap(this.map);
         });
 
         this.isHide = false;
@@ -18,9 +18,14 @@ export class DataLayer {
 
     hide() {
         this.data.forEach((v) => {
-            if (typeof v.getMap() !== "undefined") v.setMap(undefined);
+            v.setMap(null);
         });
 
         this.isHide = true;
+    }
+
+    toggle() {
+        if (this.isHide) this.show();
+        else this.hide();
     }
 }
