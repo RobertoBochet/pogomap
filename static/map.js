@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 /* global google, key */
-import {Enviroment} from "./modules/Enviroment.mjs";
+import {Environment} from "./modules/Environment.mjs";
 
 let env = null;
 
@@ -11,6 +11,6 @@ let env = null;
     let int = setInterval(() => {
         if (typeof google !== "object" || typeof google.maps !== "object") return;
         clearInterval(int);
-        env = new Enviroment(key);
+        env = new Environment(key);
     }, 100);
 })();

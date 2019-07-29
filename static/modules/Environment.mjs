@@ -6,7 +6,7 @@ import {Entity, Unverified} from "./Entity.mjs";
 import {DataLayer} from "./DataLayer.mjs";
 import {ButtonsSet} from "./ButtonSet.mjs";
 
-export class Enviroment {
+export class Environment {
     constructor(key = null) {
         this.key = typeof key === "string" ? key : null;
         this.mapElement = document.querySelector("#map");
