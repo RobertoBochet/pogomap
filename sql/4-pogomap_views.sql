@@ -1,114 +1,89 @@
 CREATE VIEW "gyms" AS
-SELECT
-    "portals"."id" AS "id",
-    "portals"."latitude" AS "latitude",
-    "portals"."longitude" AS "longitude",
-    "portals"."name" AS "name",
-    "portals"."image" AS "image",
-    "entities"."is_eligible" AS "is_eligible"
-FROM
-    "entities"
-    JOIN "portals" ON "entities"."id" = "portals"."id"
-WHERE
-    "entities"."type" = 'gym';
+SELECT "portals"."id"           AS "id",
+       "portals"."latitude"     AS "latitude",
+       "portals"."longitude"    AS "longitude",
+       "portals"."name"         AS "name",
+       "portals"."image"        AS "image",
+       "entities"."is_eligible" AS "is_eligible"
+FROM "entities"
+         JOIN "portals" ON "entities"."id" = "portals"."id"
+WHERE "entities"."type" = 'gym';
 
 CREATE VIEW "gyms_eligible" AS
-SELECT
-    "gyms"."id" AS "id",
-    "gyms"."latitude" AS "latitude",
-    "gyms"."longitude" AS "longitude",
-    "gyms"."name" AS "name",
-    "gyms"."image" AS "image"
-FROM
-    "gyms"
-WHERE
-    "gyms"."is_eligible" = TRUE;
+SELECT "gyms"."id"        AS "id",
+       "gyms"."latitude"  AS "latitude",
+       "gyms"."longitude" AS "longitude",
+       "gyms"."name"      AS "name",
+       "gyms"."image"     AS "image"
+FROM "gyms"
+WHERE "gyms"."is_eligible" = TRUE;
 
 CREATE VIEW "in_pogo" AS
-SELECT
-    "portals"."id" AS "id",
-    "portals"."latitude" AS "latitude",
-    "portals"."longitude" AS "longitude",
-    "portals"."name" AS "name",
-    "portals"."image" AS "image",
-    "entities"."type" AS "type",
-    "entities"."is_eligible" AS "is_eligible"
-FROM
-    "entities"
-    JOIN "portals" ON "entities"."id" = "portals"."id"
-WHERE
-    "entities"."type" <> 'portal';
+SELECT "portals"."id"           AS "id",
+       "portals"."latitude"     AS "latitude",
+       "portals"."longitude"    AS "longitude",
+       "portals"."name"         AS "name",
+       "portals"."image"        AS "image",
+       "entities"."type"        AS "type",
+       "entities"."is_eligible" AS "is_eligible"
+FROM "entities"
+         JOIN "portals" ON "entities"."id" = "portals"."id"
+WHERE "entities"."type" <> 'portal';
 
 CREATE VIEW "not_in_pogo" AS
-SELECT
-    "portals"."id" AS "id",
-    "portals"."latitude" AS "latitude",
-    "portals"."longitude" AS "longitude",
-    "portals"."name" AS "name",
-    "portals"."image" AS "image",
-    "entities"."is_eligible" AS "is_eligible"
-FROM
-    "entities"
-    JOIN "portals" ON "entities"."id" = "portals"."id"
-WHERE
-    "entities"."type" = 'portal';
+SELECT "portals"."id"           AS "id",
+       "portals"."latitude"     AS "latitude",
+       "portals"."longitude"    AS "longitude",
+       "portals"."name"         AS "name",
+       "portals"."image"        AS "image",
+       "entities"."is_eligible" AS "is_eligible"
+FROM "entities"
+         JOIN "portals" ON "entities"."id" = "portals"."id"
+WHERE "entities"."type" = 'portal';
 
 CREATE VIEW "pokestops" AS
-SELECT
-    "portals"."id" AS "id",
-    "portals"."latitude" AS "latitude",
-    "portals"."longitude" AS "longitude",
-    "portals"."name" AS "name",
-    "portals"."image" AS "image",
-    "entities"."is_eligible" AS "is_eligible"
-FROM
-    "entities"
-    JOIN "portals" ON "entities"."id" = "portals"."id"
-WHERE
-    "entities"."type" = 'pokestop';
+SELECT "portals"."id"           AS "id",
+       "portals"."latitude"     AS "latitude",
+       "portals"."longitude"    AS "longitude",
+       "portals"."name"         AS "name",
+       "portals"."image"        AS "image",
+       "entities"."is_eligible" AS "is_eligible"
+FROM "entities"
+         JOIN "portals" ON "entities"."id" = "portals"."id"
+WHERE "entities"."type" = 'pokestop';
 
 CREATE VIEW "pokestops_eligible" AS
-SELECT
-    "pokestops"."id" AS "id",
-    "pokestops"."latitude" AS "latitude",
-    "pokestops"."longitude" AS "longitude",
-    "pokestops"."name" AS "name",
-    "pokestops"."image" AS "image"
-FROM
-    "pokestops"
-WHERE
-    "pokestops"."is_eligible" = TRUE;
+SELECT "pokestops"."id"        AS "id",
+       "pokestops"."latitude"  AS "latitude",
+       "pokestops"."longitude" AS "longitude",
+       "pokestops"."name"      AS "name",
+       "pokestops"."image"     AS "image"
+FROM "pokestops"
+WHERE "pokestops"."is_eligible" = TRUE;
 
 CREATE VIEW "unverified" AS
-SELECT
-    "portals"."id" AS "id",
-    "portals"."latitude" AS "latitude",
-    "portals"."longitude" AS "longitude",
-    "portals"."name" AS "name",
-    "portals"."image" AS "image"
-FROM
-    "portals"
-    LEFT JOIN "entities" ON "entities"."id" = "portals"."id"
-WHERE
-    "entities"."id" IS NULL;
+SELECT "portals"."id"        AS "id",
+       "portals"."latitude"  AS "latitude",
+       "portals"."longitude" AS "longitude",
+       "portals"."name"      AS "name",
+       "portals"."image"     AS "image"
+FROM "portals"
+         LEFT JOIN "entities" ON "entities"."id" = "portals"."id"
+WHERE "entities"."id" IS NULL;
 
 CREATE VIEW "verified" AS
-SELECT
-    "portals"."id" AS "id",
-    "portals"."latitude" AS "latitude",
-    "portals"."longitude" AS "longitude",
-    "portals"."name" AS "name",
-    "portals"."image" AS "image",
-    "entities"."type" AS "type",
-    "entities"."is_eligible" AS "is_eligible"
-FROM
-    "entities"
-    JOIN "portals" ON "entities"."id" = "portals"."id";
+SELECT "portals"."id"           AS "id",
+       "portals"."latitude"     AS "latitude",
+       "portals"."longitude"    AS "longitude",
+       "portals"."name"         AS "name",
+       "portals"."image"        AS "image",
+       "entities"."type"        AS "type",
+       "entities"."is_eligible" AS "is_eligible"
+FROM "entities"
+         JOIN "portals" ON "entities"."id" = "portals"."id";
 
 CREATE VIEW "positions" AS
-SELECT
-    "portals"."id" AS "id",
-    ST_SetSRID(ST_MakePoint("portals"."longitude", "portals"."latitude"),4326) AS "position"
-FROM
-    "portals";
+SELECT "portals"."id"                                                              AS "id",
+       ST_SetSRID(ST_MakePoint("portals"."longitude", "portals"."latitude"), 4326) AS "position"
+FROM "portals";
 
