@@ -45,22 +45,22 @@ class PogoMap:
                 self.logger.info("Connected to db")
                 return
 
-            except (Exception):
+            except:
                 self.logger.info("Failed to connect to db. Will retry early...")
                 time.sleep(1)
 
         self.logger.error("Failed to connect to db")
 
-    def get_entities(self, type):
-        self.logger.debug("Get entities {}".format(type))
+    def get_entities(self, entity_type):
+        self.logger.debug("Get entities {}".format(entity_type))
 
-        if not type in GET_ENTITIES:
+        if entity_type not in GET_ENTITIES:
             raise InvalidEntity()
 
         session = self.Session()
         with session.begin():
-            for r in session.execute(GET_ENTITIES[type][0].select()).fetchall():
-                yield GET_ENTITIES[type][1](**r)
+            for r in session.execute(GET_ENTITIES[entity_type][0].select()).fetchall():
+                yield GET_ENTITIES[entity_type][1](**r)
 
     def is_editor_key_valid(self, key):
         session = self.Session()
@@ -68,7 +68,7 @@ class PogoMap:
             return True if session.execute(select([func.count()]).where(
                 tables.editor_keys.c.key == key)).scalar() == 1 else False
 
-    def set_entity(self, id, type, is_eligible):
+    def set_entity(self, id, entity_type, is_eligible):
         self.logger.info("Try to set entity {}".format(id))
 
         session = self.Session()
@@ -78,17 +78,17 @@ class PogoMap:
                 select([func.count()]).where(tables.entities.c.id == id)).scalar() == 1 else False
 
             if not there_is:
-                if type not in ["portal", "pokestop", "gym"]:
+                if entity_type not in ["portal", "pokestop", "gym"]:
                     raise InvalidEntity()
 
-                session.execute(tables.entities.insert().values(id=id, type=type, is_eligible=is_eligible))
+                session.execute(tables.entities.insert().values(id=id, type=entity_type, is_eligible=is_eligible))
 
                 self.logger.info("Entity {} now is verified".format(id))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
 
-            elif there_is and type == "unverified":
+            elif there_is and entity_type == "unverified":
 
                 session.execute(tables.entities.delete().where(tables.entities.c.id == id))
 
@@ -98,14 +98,15 @@ class PogoMap:
                     GET_ENTITIES["unverified"][0].select().where(GET_ENTITIES["unverified"][0].c.id == id)).fetchone())
 
             elif there_is:
-                if type not in ["portal", "pokestop", "gym"]:
+                if entity_type not in ["portal", "pokestop", "gym"]:
                     raise InvalidEntity()
 
-                session.execute(tables.entities.update().where(tables.entities.c.id == id) \
-                                .values(id=id, type=type, is_eligible=is_eligible))
+                session.execute(
+                    tables.entities.update().where(tables.entities.c.id == id).values(id=id, type=entity_type,
+                                                                                      is_eligible=is_eligible))
 
                 self.logger.info(
-                    "Entity {} now is a {} {}".format(id, type, "eligible" if is_eligible else "not eligible"))
+                    "Entity {} now is a {} {}".format(id, entity_type, "eligible" if is_eligible else "not eligible"))
 
                 return GET_ENTITIES["verified"][1](**session.execute(
                     GET_ENTITIES["verified"][0].select().where(GET_ENTITIES["verified"][0].c.id == id)).fetchone())
