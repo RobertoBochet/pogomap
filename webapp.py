@@ -13,7 +13,7 @@ from pogomap.exceptions import InvalidEntity
 
 
 class WebApp(Flask):
-    def __init__(self, google_api_key: str, flask_port: int = 5775, log_level: Union[int, str] = logging.ERROR,
+    def __init__(self, google_api_key: str, log_level: Union[int, str] = logging.ERROR,
                  **kwargs):
         super(WebApp, self).__init__("pogomap",
                                      template_folder=join(dirname(abspath(__file__)), 'templates'),
