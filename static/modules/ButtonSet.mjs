@@ -25,8 +25,14 @@ export class ButtonsSet {
 
     select(button) {
         this.buttons.forEach((v) => {
-            if(v.id === button) v.classList.add("selected");
+            if (v.id === button) v.classList.add("selected");
             else v.classList.remove("selected");
+        });
+    }
+
+    deselect() {
+        this.buttons.forEach((v) => {
+            v.classList.remove("selected");
         });
     }
 }

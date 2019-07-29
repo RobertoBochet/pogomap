@@ -1,6 +1,5 @@
 "use strict";
 
-
 export class DataLayer {
     constructor(map, data = []) {
         this.isHide = true;

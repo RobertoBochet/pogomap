@@ -3,8 +3,6 @@
 
 export class Entity {
     constructor(obj) {
-        let self = this;
-
         this.id = obj.id;
         this.name = obj.name;
         this.latitude = obj.latitude;
@@ -36,59 +34,53 @@ export class Entity {
             icon: this.icon,
             zIndex: this.icon.zIndex || 1
         });
-        this.marker.addListener("click", () => {
-            self.updateInfoBox();
-        });
-        this.marker.setMap(Entity.env.map);
     }
 
-    updateInfoBox() {
-        console.log(this);
-        Entity.env.currentEntity = this;
-
-        Entity.env.infoSpaces.name.innerText = this.name;
-        Entity.env.infoSpaces.image.src = this.image;
-
-        if (Entity.env.key !== null) {
-            Entity.env.editorButtons.type.container.childNodes.forEach((o) => {
-                o.classList.remove("selected");
-            });
-            Entity.env.editorButtons.eligible.container.childNodes.forEach((o) => {
-                o.classList.remove("selected");
-            });
-            switch (this.type) {
-                case "gym":
-                    Entity.env.editorButtons.type.select("button-gym");
-                    break;
-                case "pokestop":
-                    Entity.env.editorButtons.type.select("button-pokestop");
-                    break;
-                case "unverified":
-                    Entity.env.editorButtons.type.select("button-unverified");
-                    break;
-                case "portal":
-                    Entity.env.editorButtons.type.select("button-portal");
-                    break;
+    static makeIcons() {
+        Entity.icons = {
+            portal: {
+                url: "/static/icons/portal_pink.svg",
+                size: new google.maps.Size(60, 60),
+                scaledSize: new google.maps.Size(60, 60),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(1 / 2 * 60, 9 / 10 * 60)
+            },
+            pokestop: {
+                url: "/static/icons/pokestop_blue.svg",
+                size: new google.maps.Size(60, 60),
+                scaledSize: new google.maps.Size(60, 60),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(1 / 2 * 60, 9 / 10 * 60),
+                zIndex: 2
+            },
+            gym: {
+                url: "/static/icons/gym.svg",
+                size: new google.maps.Size(45, 45),
+                scaledSize: new google.maps.Size(45, 45),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(1 / 2 * 45, 1 / 2 * 45),
+                zIndex: 3
+            },
+            gymEligible: {
+                url: "/static/icons/gym_gold.svg",
+                size: new google.maps.Size(45, 45),
+                scaledSize: new google.maps.Size(45, 45),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(1 / 2 * 45, 1 / 2 * 45),
+                zIndex: 4
+            },
+            unverified: {
+                url: "/static/icons/question_mark.svg",
+                size: new google.maps.Size(45, 45),
+                scaledSize: new google.maps.Size(45, 45),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(1 / 2 * 45, 1 / 2 * 45),
+                zIndex: 5
             }
-            switch (this.isEligible) {
-                case true:
-                    Entity.env.editorButtons.eligible.select("button-eligible");
-                    break;
-                case false:
-                    Entity.env.editorButtons.eligible.select("button-not-eligible");
-                    break;
-            }
-        }
-    }
-
-    hide() {
-        this.marker.setMap(null);
-    }
-
-    show() {
-        this.marker.setMap(Entity.env.map);
+        };
     }
 }
+
 
 export class Unverified extends Entity {
     constructor(obj) {
