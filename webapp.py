@@ -90,11 +90,12 @@ class WebApp(Flask):
             return ResponseJSON(error="Must be provided some entities")
 
         try:
-            self.pogomap.add_entities(flask.request.json["entities"])
+            new_portals = self.pogomap.add_entities(flask.request.json["entities"])
 
-            return ResponseJSON()
+            return ResponseJSON(payload_name="entities", payload=new_portals)
 
         except Exception as e:
+            import traceback;traceback.print_exc()
             self.logger.info("Exception {}".format(type(e).__name__))
             return ResponseJSON(exception=e)
 

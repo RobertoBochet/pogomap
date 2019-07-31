@@ -126,6 +126,7 @@ export class GUI {
         this.editorButtons.edit = new ButtonsSet("buttons-edit");
 
         this.editorButtons.edit.addButton("button-add").addEventListener("click", () => {
+            this.env.addEntities();
         });
         this.editorButtons.edit.addButton("button-remove").addEventListener("click", () => {
             this.env.removeEntity();

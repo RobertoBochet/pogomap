@@ -25,6 +25,7 @@ export class Environment {
         // Retrieves the entities
         this.getEntities();
     }
+
     setCurrentEntity(entity) {
         this.currentEntity = entity;
 
@@ -109,6 +110,40 @@ export class Environment {
                     this.entities.remove(this.currentEntity);
                     this.setCurrentEntity(null);
                 } else console.error(data.error);
+            },
+            contentType: "application/json",
+            dataType: "json"
+        }).then(null);
+    }
+
+    addEntities() {
+        let data = prompt("Paste the list of portals in JSON");
+
+        if (data === null) return;
+
+        try {
+            data = JSON.parse(data);
+        } catch (e) {
+            alert("The data provided are not valid JSON");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/add_entities/",
+            data: JSON.stringify({
+                key: this.key,
+                entities: data
+            }),
+            success: (response) => {
+                if (response.done === true) {
+                    for (let o of response.entities) {
+                        this.entities.push(new Unverified(o));
+                    }
+                } else {
+                    console.error(response.error);
+                    alert("An error occurred on the server");
+                }
             },
             contentType: "application/json",
             dataType: "json"
