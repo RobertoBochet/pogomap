@@ -81,13 +81,13 @@ export class Environment {
             }),
             success: (data) => {
                 if (data.done === true) {
-                    let new_entity = (typeof data.entity.type === "undefined") ? new Unverified(data.entity) :
+                    let newEntity = (typeof data.entity.type === "undefined") ? new Unverified(data.entity) :
                         new Entity(data.entity);
 
                     this.entities.remove(this.currentEntity);
 
-                    this.entities.push(new_entity);
-                    this.setCurrentEntity(new_entity);
+                    this.entities.push(newEntity);
+                    this.setCurrentEntity(newEntity);
                 } else console.error(data.error);
             }
         }).then(null);
