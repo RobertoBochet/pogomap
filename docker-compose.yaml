@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  webapp:
+    build:
+      context: ./
+      dockerfile: pogomap.Dockerfile
+    restart: always
+    environment:
+      - GOOGLE_API_KEY=[GOOGLE_API_KEY]
+      - PG_HOST=db
+#     - PG_USER=[POSTGRES_USER]
+#     - PG_PASS=[POSTGRES_PASSWORD]
+#     - PG_USER=[POSTGRES_DB_NAME]
+#     - LOG_LEVEL=[LOG_LEVEL]
+    ports:
+      - "127.0.0.1:5775:5775/tcp"
+    volumes:
+      - /srv/pogomap/map/layers:/pogomap/static/layers
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./
+      dockerfile: postgres.Dockerfile
+    restart: always
+    environment:
+      - POSTGRES_DB=pogomap
+#     - POSTGRES_PASSWORD=[POSTGRES_PASSWORD]
+    volumes:
+      - /srv/pogomap/db:/var/lib/postgresql/data

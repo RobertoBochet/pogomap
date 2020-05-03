@@ -1,6 +1,7 @@
-/static/layers/
-/sql/*
-!/sql/[0-6]-*.sql
-/tools/
-/test/
+/pogomap/static/layers/
+/pogomap/sql/*
+!/pogomap/sql/[0-6]-*.sql
+/pogomap/test/
+/docker-compose.*
+!/docker-compose.yaml
 /test.env
