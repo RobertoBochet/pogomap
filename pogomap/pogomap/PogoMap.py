@@ -131,7 +131,7 @@ class PogoMap:
             else:
                 raise Exception()
 
-        if len(kwargs) is not 0:
+        if len(kwargs) != 0:
             entities += [{kwargs}]
 
         portals: List[Portal] = []
