@@ -160,9 +160,9 @@ class PogoMap:
                     ))
                 # If the portal has a image use also it to find similar portal
                 if p.image != "":
-                    where = or_(where,
-                                tables.portals.c.image == "//" + p.image.split("//")[1])
+                    where = or_(where, tables.portals.c.image == p.get_image())
 
+                # TODO improve the method to check similar entities
                 similar_id = []
                 # Search similar entities in the db
                 for r in session.execute(tables.portals.select().where(where)).fetchall():
@@ -170,7 +170,7 @@ class PogoMap:
                     # Updates if the name and the image are the same or the name is the same and positions are close
                     if r["latitude"] != p.latitude or r["longitude"] != p.longitude:
                         if r["name"] == p.name:
-                            if r["image"] == "//" + p.image.split("//")[1] or geopy.distance.vincenty(
+                            if r["image"] == p.get_image() or geopy.distance.vincenty(
                                     (r["latitude"], r["longitude"]),
                                     (p.latitude, p.longitude)
                             ).km < 0.2:
@@ -179,13 +179,13 @@ class PogoMap:
                     # Manages different name
                     # Updates if position or image are the same
                     elif r["name"] != p.name:
-                        if r["image"] == "//" + p.image.split("//")[1] or (
+                        if r["image"] == p.get_image() or (
                                 r["latitude"] == p.latitude and r["longitude"] == p.longitude):
                             similar_id.append(r["id"])
 
                     # Manages different image
                     # Updates if position and name are the same
-                    elif r["image"] != "//" + p.image.split("//")[1]:
+                    elif r["image"] != p.get_image():
                         if r["name"] == p.name and (
                                 r["latitude"] == p.latitude and r["longitude"] == p.longitude):
                             similar_id.append(r["id"])
@@ -196,7 +196,7 @@ class PogoMap:
                                     .values(name=p.name,
                                             latitude=p.latitude,
                                             longitude=p.longitude,
-                                            image=p.image))
+                                            image=p.get_image()))
                     self.logger.info("Entity {} updated".format(p.name))
 
                 # If there is not a similar entity, prepare for addition
